@@ -30,7 +30,7 @@ struct ActionSequenceState {
 extern const int MAX_CONCURRENT_SEQUENCES; // 最大运行的序列数
 extern ActionSequenceState activeSequences[]; // 正在运行的序列数组
 extern int activeSequenceCount; // 当前活跃的序列数量
-
+extern bool servoChannelOccupied[16];   //舵机通道占用情况
 // 声明函数
 void executeAction(int sequenceIndex);    // 执行指定序列的当前动作
 int addActionSequence(RotationAction actions[], int count);   // 添加一个动作序列并返回其索引

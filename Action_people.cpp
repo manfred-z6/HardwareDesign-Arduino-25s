@@ -5,6 +5,7 @@ const int MAX_CONCURRENT_SEQUENCES = 10; // 最多运行序列数
 const int MAX_ACTION_SINGLESEQ = 20;  // 单个序列最多运行动作数
 ActionSequenceState activeSequences[MAX_CONCURRENT_SEQUENCES] = {};
 int activeSequenceCount = 0;  //当前占用的序列数
+bool servoChannelOccupied[16] = {false};
 
 // 将微秒转换为PCA9685所需的PWM值
 uint16_t getPulseWidth(unsigned long microseconds) {
@@ -24,6 +25,7 @@ void updateSequences() {
       
       // 检查当前动作是否完成
       if (millis() - seq->startTime >= currentAction.duration) {
+        servoChannelOccupied[currentAction.servoChannel] = false;
         // 当前动作完成，停止这个动作控制的舵机
         pwm.setPWM(currentAction.servoChannel, 0, getPulseWidth(1500));
         
@@ -56,6 +58,19 @@ void executeAction(int sequenceIndex) {
   
   RotationAction action = seq->sequence[seq->currentActionIndex];
   
+  // 检查舵机通道是否被占用
+  if (servoChannelOccupied[action.servoChannel]) {
+    Serial.print("Servo channel ");
+    Serial.print(action.servoChannel);
+    Serial.println(" is busy, waiting...");
+    // 可以添加重试逻辑或等待策略
+    return;
+  }
+  
+  // 标记舵机通道为占用状态
+  servoChannelOccupied[action.servoChannel] = true;
+
+
   int pulseWidth;
   if (action.direction == 0) {
     pulseWidth = map(action.speed, 0, 100, 1500, 500); // 顺时针，脉宽变短
@@ -141,9 +156,14 @@ void stopSequence(int sequenceIndex) {
   
   ActionSequenceState* seq = &activeSequences[sequenceIndex];
   if (!seq->isActive) return; // 如果槽位本来就是空的，直接返回
-  // 停止该序列控制的所有舵机
-  for (int i = 0; i < seq->actionCount; i++) {
-    pwm.setPWM(seq->sequence[i].servoChannel, 0, getPulseWidth(1500));
+  
+  // 只停止当前正在执行的舵机动作
+  if (seq->currentActionIndex >= 0 && seq->currentActionIndex < seq->actionCount) {
+    RotationAction currentAction = seq->sequence[seq->currentActionIndex];
+    pwm.setPWM(currentAction.servoChannel, 0, getPulseWidth(1500));
+    
+    // 释放舵机通道占用状态
+    servoChannelOccupied[currentAction.servoChannel] = false;
   }
   
   seq->isRunning = false;
