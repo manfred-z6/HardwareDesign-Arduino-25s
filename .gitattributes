@@ -1,0 +1,2 @@
+# 强制所有 .ino 文件使用 LF 换行符，不进行自动转换
+*.ino text eol=lf

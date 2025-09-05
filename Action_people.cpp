@@ -57,7 +57,7 @@ void executeAction(int sequenceIndex) {
   if (seq->currentActionIndex < 0 || seq->currentActionIndex >= seq->actionCount) return;
   
   RotationAction action = seq->sequence[seq->currentActionIndex];
-  
+ 
   // 检查舵机通道是否被占用
   if (servoChannelOccupied[action.servoChannel]) {
     Serial.print("Servo channel ");
@@ -156,7 +156,7 @@ void stopSequence(int sequenceIndex) {
   
   ActionSequenceState* seq = &activeSequences[sequenceIndex];
   if (!seq->isActive) return; // 如果槽位本来就是空的，直接返回
-  
+
   // 只停止当前正在执行的舵机动作
   if (seq->currentActionIndex >= 0 && seq->currentActionIndex < seq->actionCount) {
     RotationAction currentAction = seq->sequence[seq->currentActionIndex];

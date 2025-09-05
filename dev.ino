@@ -45,6 +45,7 @@ void onClick1(){
   int seqIndex = action_attack_1();
   if (seqIndex >= 0) {
     startSequence(seqIndex);
+    delay(50);
   }
 }
 
@@ -53,5 +54,6 @@ void onClick2(){
   int seqIndex = action_back_lb();
   if (seqIndex >= 0) {
     startSequence(seqIndex);
+    delay(50);
   }
 }
