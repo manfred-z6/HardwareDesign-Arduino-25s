@@ -16,7 +16,7 @@ OneButton button1(BUTTON_1, true, true);
 OneButton button2(BUTTON_2, true, true);
 
 void setup() {
-  
+  Serial.begin(115200);
   // 初始化PCA9685
   pwm.begin();
   pwm.setPWMFreq(50);  // 设置PWM频率为50Hz，适用于标准舵机
@@ -32,9 +32,7 @@ void setup() {
   Serial.println("Initialization complete");
 
   //初始化nfc
-  Serial.begin(115200);
   Serial.println("Hello! Testing PN532 with Adafruit Library...");
-
   nfc.begin();
 
   uint32_t versiondata = nfc.getFirmwareVersion();
@@ -49,6 +47,7 @@ void setup() {
 
   nfc.SAMConfig(); // 配置模块读取标签
   Serial.println("Waiting for an ISO14443A Card ...");
+  delay(100);
 }
 
 void loop() {
