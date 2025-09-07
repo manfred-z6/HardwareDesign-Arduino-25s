@@ -1,20 +1,22 @@
 #include "Nfc.h"
 
 // 定义全局变量
-uint8_t lastUid[7] = {0};
-uint8_t lastUidLength = 0;
-unsigned long lastReadTime = 0;
-const unsigned long DEBOUNCE_TIME = 2000; // 防抖时间2秒
+const unsigned long REQUIRED_DETECTION_TIME = 1000; // 需要连续检测到卡片500ms才算有效
 
-const uint8_t targetUid[] = {0x4, 0x91, 0xF3, 0x87, 0x2B, 0x2, 0x89};
-const uint8_t targetUidLength = 7;
-
-// NFC状态机变量
 NFCState nfcState = NFC_STATE_IDLE;
 unsigned long stateEntryTime = 0;
 uint8_t currentUid[7] = {0};
 uint8_t currentUidLength = 0;
-bool cardAlreadyProcessed = false;
+bool cardProcessed = false;
+
+// 定义UID-函数映射表
+const UidFunctionMap uidFunctionMap[] = {
+  {{0x4, 0x81, 0x8F, 0x8F, 0x2B, 0x2, 0x89}, 7, onUid1Detected},  // 第一张卡
+  {{0x04, 0x48, 0x87, 0x65, 0x43, 0x21, 0x00}, 7, onUid2Detected},  // 第二张卡
+  {{0x04, 0x12, 0x34, 0x56, 0x78, 0x9A, 0x00}, 7, onUid3Detected}   // 第三张卡
+};
+
+const int uidFunctionCount = sizeof(uidFunctionMap) / sizeof(uidFunctionMap[0]);
 
 // 初始化PN532
 void NFC_Init() {
@@ -25,62 +27,88 @@ void NFC_Init() {
     while (1);
   }
   nfc.SAMConfig();
-  Serial.println("NFC Initialized. Waiting for an ISO14443A Card ...");
+  Serial.println("NFC Initialized. Waiting for cards...");
+  Serial.print("Registered ");
+  Serial.print(uidFunctionCount);
+  Serial.println(" UID-function mappings.");
 }
 
 // 非阻塞更新NFC状态
 void updatenfc() {
   unsigned long currentMillis = millis();
+  uint8_t success;
+  uint8_t uid[7] = {0};
+  uint8_t uidLength;
 
   switch (nfcState) {
     case NFC_STATE_IDLE:
-      if (nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, currentUid, &currentUidLength, 20)) {
-        Serial.print("Found a card. UID: ");
-        for (uint8_t i = 0; i < currentUidLength; i++) {
-          Serial.print(" 0x"); Serial.print(currentUid[i], HEX);
+      // 尝试检测卡片，超时时间极短（5ms）
+      success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 20);
+      if (success) {
+        // 检测到卡片，转移到检测中状态
+        memcpy(currentUid, uid, uidLength);
+        currentUidLength = uidLength;
+        nfcState = NFC_STATE_DETECTING;
+        stateEntryTime = currentMillis;
+        cardProcessed = false;
+        
+        Serial.print("Card detected. UID: ");
+        for (uint8_t i = 0; i < uidLength; i++) {
+          Serial.print(" 0x"); Serial.print(uid[i], HEX);
         }
         Serial.println();
-        nfcState = NFC_STATE_CARD_PRESENT;
-        stateEntryTime = currentMillis;
-        cardAlreadyProcessed = false;
       }
       break;
 
-    case NFC_STATE_CARD_PRESENT:
-      // 检查是否是目标卡且防抖时间已过
-      if (currentUidLength == targetUidLength && 
-          compareUid(currentUid, (uint8_t*)targetUid, targetUidLength) &&
-          (currentMillis - stateEntryTime > DEBOUNCE_TIME) &&
-          !cardAlreadyProcessed) {
+    case NFC_STATE_DETECTING:
+      // 检查卡片是否仍然存在且停留时间足够
+      if (currentMillis - stateEntryTime >= REQUIRED_DETECTION_TIME) {
+        nfcState = NFC_STATE_PROCESSING;
+        stateEntryTime = currentMillis;
+      }
+      break;
+
+    case NFC_STATE_PROCESSING:
+      if (!cardProcessed) {
+        // 查找并执行对应的函数
+        bool uidRecognized = false;
         
-        memcpy(lastUid, currentUid, currentUidLength);
-        lastUidLength = currentUidLength;
-        lastReadTime = currentMillis;
-
-        onTargetCardDetected(); // 执行目标卡触发的函数
-        cardAlreadyProcessed = true;
-
+        for (int i = 0; i < uidFunctionCount; i++) {
+          if (currentUidLength == uidFunctionMap[i].uidLength && 
+              compareUid(currentUid, (uint8_t*)uidFunctionMap[i].uid, currentUidLength)) {
+            Serial.print("Executing function for UID: ");
+            for (uint8_t j = 0; j < currentUidLength; j++) {
+              Serial.print(" 0x"); Serial.print(currentUid[j], HEX);
+            }
+            Serial.println();
+            
+            uidFunctionMap[i].action(); // 执行该UID对应的函数
+            uidRecognized = true;
+            break;
+          }
+        }
+        
+        if (!uidRecognized) {
+          Serial.println("Unknown UID detected.");
+          onUnknownUidDetected(); // 执行未知UID处理函数
+        }
+        
+        cardProcessed = true;
         nfcState = NFC_STATE_WAIT_REMOVAL;
         stateEntryTime = currentMillis;
-        Serial.println("Target card processed. Waiting for removal...");
-      } 
-      // 如果不是目标卡，或者防抖时间未过，直接进入等待移除状态
-      else if (!(currentUidLength == targetUidLength && 
-                compareUid(currentUid, (uint8_t*)targetUid, targetUidLength)) ||
-                (currentMillis - stateEntryTime <= DEBOUNCE_TIME)) {
-        nfcState = NFC_STATE_WAIT_REMOVAL;
-        stateEntryTime = currentMillis;
-        Serial.println("Non-target card or in debounce. Waiting for removal...");
       }
       break;
 
     case NFC_STATE_WAIT_REMOVAL:
-      if (!nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, currentUid, &currentUidLength, 20)) {
+      // 检查卡片是否已移开
+      success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, uid, &uidLength, 20);
+      if (!success) {
+        // 卡片已移除，返回空闲状态
         nfcState = NFC_STATE_IDLE;
         memset(currentUid, 0, sizeof(currentUid));
         currentUidLength = 0;
-        cardAlreadyProcessed = false;
-        Serial.println("Card removed. Ready for next scan.");
+        cardProcessed = false;
+        Serial.println("Card removed. Ready for next card.");
       }
       break;
   }
@@ -96,12 +124,23 @@ bool compareUid(uint8_t* uid1, uint8_t* uid2, uint8_t length) {
   return true;
 }
 
-// NFC触发函数
-void onTargetCardDetected() {
-  Serial.println("Target NFC card detected! Executing assigned function...");
-  // 这里可以添加检测到目标卡后需要执行的动作序列，例如：
-  // int seqIndex = action_attack_1();
-  // if (seqIndex >= 0) {
-  //   startSequence(seqIndex);
-  // }
+// UID对应的函数实现（空函数，你可以后续修改）
+void onUid1Detected() {
+  // 第一张卡的函数 - 后续可以修改为具体实现
+  Serial.println("Function for UID 1 executed");
+}
+
+void onUid2Detected() {
+  // 第二张卡的函数 - 后续可以修改为具体实现
+  Serial.println("Function for UID 2 executed");
+}
+
+void onUid3Detected() {
+  // 第三张卡的函数 - 后续可以修改为具体实现
+  Serial.println("Function for UID 3 executed");
+}
+
+void onUnknownUidDetected() {
+  // 未知UID的处理函数 - 后续可以修改为具体实现
+  Serial.println("Unknown UID function executed");
 }

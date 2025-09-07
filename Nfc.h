@@ -5,34 +5,42 @@
 #include <Wire.h>
 #include <Adafruit_PN532.h>
 
-extern Adafruit_PN532 nfc; 
+extern Adafruit_PN532 nfc;
 
 // NFC状态机状态定义
 enum NFCState {
   NFC_STATE_IDLE,        // 空闲状态，等待卡片出现
-  NFC_STATE_CARD_PRESENT, // 卡片在场，进行判断
-  NFC_STATE_WAIT_REMOVAL  // 等待当前卡片移除
+  NFC_STATE_DETECTING,   // 检测到卡片，等待稳定
+  NFC_STATE_PROCESSING,  // 处理卡片，执行对应函数
+  NFC_STATE_WAIT_REMOVAL // 等待卡片移除
+};
+
+// 定义UID-函数映射结构
+struct UidFunctionMap {
+  uint8_t uid[7];        // 卡片的UID
+  uint8_t uidLength;     // UID长度
+  void (*action)();      // 该UID对应的函数指针
 };
 
 // 声明全局变量
-extern uint8_t lastUid[];
-extern uint8_t lastUidLength;
-extern unsigned long lastReadTime;
-extern const unsigned long DEBOUNCE_TIME;
-
-extern const uint8_t targetUid[];
-extern const uint8_t targetUidLength;
+extern const unsigned long REQUIRED_DETECTION_TIME;
 
 extern NFCState nfcState;
 extern unsigned long stateEntryTime;
 extern uint8_t currentUid[];
 extern uint8_t currentUidLength;
-extern bool cardAlreadyProcessed;
+extern bool cardProcessed;
 
 // 声明函数
 void NFC_Init();
 void updatenfc();
 bool compareUid(uint8_t* uid1, uint8_t* uid2, uint8_t length);
-void onTargetCardDetected(); // 检测到目标卡时执行的函数
+void registerUidFunctions(); // 注册所有UID和对应的函数
+
+// 声明各个UID对应的函数（你可以根据需要修改函数名和实现）
+void onUid1Detected();
+void onUid2Detected();
+void onUid3Detected();
+void onUnknownUidDetected();
 
 #endif
