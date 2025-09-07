@@ -5,6 +5,7 @@
 #include "Action_people.h"
 #include "Slider.h"
 #include "Nfc.h"
+#include "GlobalVars.h"
 
 // 创建硬件对象
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
@@ -15,6 +16,9 @@ Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
 #define BUTTON_2 6
 OneButton button1(BUTTON_1, true, true);
 OneButton button2(BUTTON_2, true, true);
+
+//定义全局变量
+volatile bool isAnySequenceRunning = false; //判断是否有动作序列在执行
 
 void setup() {
   Serial.begin(115200);
@@ -41,15 +45,19 @@ void setup() {
 }
 
 void loop() {
+  // 首先重置状态标志，假设没有序列运行
+  isAnySequenceRunning = false;
+
   //更新所有滑块序列状态
   updateSliderSequences();
 
   //更新所有动作序列状态
   updateSequences();
 
-  //更新NFC状态
-  updatenfc();
-
+  // 只有在没有序列运行时，才更新NFC状态
+  if (!isAnySequenceRunning) {
+    updatenfc();
+  }
   //处理按钮事件
   button1.tick();
   button2.tick();

@@ -1,6 +1,5 @@
 #include "Slider.h"
-#include <Arduino.h>
-
+#include "GlobalVars.h"
 // 定义全局变量
 const int MAX_SLIDER_SEQUENCES = 10;
 SliderSequenceState sliderSequences[MAX_SLIDER_SEQUENCES] = {};
@@ -26,6 +25,8 @@ void initSliderMotors() {
 
 // 更新所有滑块序列状态，需在loop中定期调用
 void updateSliderSequences() {
+  bool foundRunning = false; // 局部变量
+
   for (int i = 0; i < MAX_SLIDER_SEQUENCES; i++) {
     SliderSequenceState* seq = &sliderSequences[i];
     
@@ -56,7 +57,11 @@ void updateSliderSequences() {
         // 执行步进操作
         stepMotor(i);
       }
+      foundRunning = true; // 发现有滑块序列在运行
     }
+  }
+  if (foundRunning) {
+    isAnySequenceRunning = true;
   }
 }
 

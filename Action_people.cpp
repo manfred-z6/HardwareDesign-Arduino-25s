@@ -1,5 +1,5 @@
 #include "Action_people.h"
-
+#include "GlobalVars.h"
 // 定义全局变量
 const int MAX_CONCURRENT_SEQUENCES = 10;
 const int MAX_ACTION_SINGLESEQ = 20;
@@ -17,6 +17,8 @@ uint16_t getPulseWidth(unsigned long microseconds) {
 
 // 更新所有序列状态，需在loop中定期调用
 void updateSequences() {
+  bool foundRunning = false; // 局部变量，用于检查当前是否有序列运行
+
   for (int i = 0; i < MAX_CONCURRENT_SEQUENCES; i++) {
     ActionSequenceState* seq = &activeSequences[i];
     
@@ -44,7 +46,12 @@ void updateSequences() {
           Serial.println(" completed");
         }
       }
+      foundRunning = true; // 发现有序列在运行
     }
+  }
+
+  if(foundRunning){
+    isAnySequenceRunning = foundRunning;  // 更新全局状态标志
   }
 }
 
