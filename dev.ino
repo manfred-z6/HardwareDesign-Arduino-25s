@@ -5,74 +5,62 @@
 #include "Action_people.h"
 #include "Nfc.h"
 
-// 创建PCA9685对象，使用默认地址0x40
+// 创建硬件对象
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
-Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚，参数无意义
+Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
 
+// 按钮定义
 #define BUTTON_1 5
 #define BUTTON_2 6
-
 OneButton button1(BUTTON_1, true, true);
 OneButton button2(BUTTON_2, true, true);
 
 void setup() {
   Serial.begin(115200);
-  // 初始化PCA9685
+  
+  // 初始化PCA9685舵机驱动
   pwm.begin();
   pwm.setPWMFreq(50);  // 设置PWM频率为50Hz，适用于标准舵机
-  
   // 初始化所有舵机到停止状态
   for (int i = 0; i < 16; i++) {
     pwm.setPWM(i, 0, getPulseWidth(1500));
   }
   
+  // 初始化按钮
   button1.attachClick(onClick1);
   button2.attachClick(onClick2);
   
-  Serial.println("Initialization complete");
+  // 初始化NFC模块
+  NFC_Init(); // 使用Nfc.cpp中定义的初始化函数
 
-  //初始化nfc
-  Serial.println("Hello! Testing PN532 with Adafruit Library...");
-  nfc.begin();
-
-  uint32_t versiondata = nfc.getFirmwareVersion();
-  if (!versiondata) {
-    Serial.print("Didn't find PN53x board. Please check your wiring.");
-    while (1); // halt
-  }
-  // 打印固件版本信息
-  Serial.print("Found chip PN5"); Serial.println((versiondata>>24) & 0xFF, HEX);
-  Serial.print("Firmware ver. "); Serial.print((versiondata>>16) & 0xFF, DEC);
-  Serial.print('.'); Serial.println((versiondata>>8) & 0xFF, DEC);
-
-  nfc.SAMConfig(); // 配置模块读取标签
-  Serial.println("Waiting for an ISO14443A Card ...");
-  delay(100);
+  Serial.println("System Initialization Complete.");
 }
 
 void loop() {
-  // 更新所有动作序列状态
+  // 1. 更新所有动作序列状态 (必须非阻塞)
   updateSequences();
 
-  // 更新读取到的nfc卡
+  // 2. 非阻塞更新NFC状态
   updatenfc();
 
+  // 3. 处理按钮事件
   button1.tick();
   button2.tick();
   
-  // 可以添加其他代码，不会阻塞序列执行
+  // 这里可以添加其他非阻塞任务
 }
 
-void onClick1(){
-  Serial.println("button1 clicked - starting attack sequence");
+// 按钮回调函数
+void onClick1() {
+  Serial.println("Button1 clicked - starting attack sequence");
   int seqIndex = action_attack_1();
   if (seqIndex >= 0) {
     startSequence(seqIndex);
   }
 }
 
-void onClick2(){
-  Serial.println("button2 clicked - starting back_lb sequence");
+void onClick2() {
+  Serial.println("Button2 clicked - starting back_lb sequence");
   int seqIndex = action_back_lb();
   if (seqIndex >= 0) {
     startSequence(seqIndex);
