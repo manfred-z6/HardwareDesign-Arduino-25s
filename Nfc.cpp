@@ -11,9 +11,26 @@ bool cardProcessed = false;
 
 // 定义UID-函数映射表
 const UidFunctionMap uidFunctionMap[] = {
-  {{0x4, 0x81, 0x8F, 0x8F, 0x2B, 0x2, 0x89}, 7, onUid1Detected},  // 第一张卡
-  {{0x04, 0x48, 0x87, 0x65, 0x43, 0x21, 0x00}, 7, onUid2Detected},  // 第二张卡
-  {{0x04, 0x12, 0x34, 0x56, 0x78, 0x9A, 0x00}, 7, onUid3Detected}   // 第三张卡
+  {{0xEC, 0x45, 0x70, 0x6}, 4, onUid1Detected},  
+  {{0x4, 0x81, 0x8F, 0x8F, 0x2B, 0x2, 0x89}, 7, onUid2Detected},  
+  {{0x4, 0xB1, 0xCE, 0x89, 0x2B, 0x2, 0x89}, 7, onUid3Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid4Detected},
+  {{0x4, 0xF1, 0x42, 0x89, 0x2B, 0x2, 0x89}, 7, onUid5Detected},  
+  {{0x4, 0x91, 0xF3, 0x87, 0x2B, 0x2, 0x89}, 7, onUid6Detected},  
+  {{0x4, 0x1, 0xEF, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid7Detected},  
+  {{0x4, 0xC1, 0x6B, 0x8F, 0x2B, 0x2, 0x89}, 7, onUid8Detected},  
+  {{0x4, 0x41, 0xA, 0x8C, 0x2B, 0x2, 0x89}, 7, onUid9Detected},  
+  {{0x4, 0x91, 0x64, 0x81, 0x2B, 0x2, 0x89}, 7, onUid10Detected},  
+  {{0x4, 0x41, 0x1C, 0x86, 0x2B, 0x2, 0x89}, 7, onUid11Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid12Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid13Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid14Detected},   
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid15Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid16Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid17Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid18Detected},  
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid20Detected},
+  {{0x4, 0x71, 0xB6, 0x8A, 0x2B, 0x2, 0x89}, 7, onUid21Detected}
 };
 
 const int uidFunctionCount = sizeof(uidFunctionMap) / sizeof(uidFunctionMap[0]);
@@ -138,6 +155,78 @@ void onUid2Detected() {
 void onUid3Detected() {
   // 第三张卡的函数 - 后续可以修改为具体实现
   Serial.println("Function for UID 3 executed");
+}
+
+void onUid4Detected() {
+  Serial.println("Function for UID 4 executed");
+}
+
+void onUid5Detected() {
+  Serial.println("Function for UID 5 executed");
+}
+
+void onUid6Detected() {
+  Serial.println("Function for UID 6 executed");
+}
+
+void onUid7Detected() {
+  Serial.println("Function for UID 7 executed");
+}
+
+void onUid8Detected() {
+  Serial.println("Function for UID 8 executed");
+}
+
+void onUid9Detected() {
+  Serial.println("Function for UID 9 executed");
+}
+
+void onUid10Detected() {
+  Serial.println("Function for UID 10 executed");
+}
+
+void onUid11Detected() {
+  Serial.println("Function for UID 11 executed");
+}
+
+void onUid12Detected() {
+  Serial.println("Function for UID 12 executed");
+}
+
+void onUid13Detected() {
+  Serial.println("Function for UID 13 executed");
+}
+
+void onUid14Detected() {
+  Serial.println("Function for UID 14 executed");
+}
+
+void onUid15Detected() {
+  Serial.println("Function for UID 15 executed");
+}
+
+void onUid16Detected() {
+  Serial.println("Function for UID 16 executed");
+}
+
+void onUid17Detected() {
+  Serial.println("Function for UID 17 executed");
+}
+
+void onUid18Detected() {
+  Serial.println("Function for UID 18 executed");
+}
+
+void onUid19Detected() {
+  Serial.println("Function for UID 19 executed");
+}
+
+void onUid20Detected() {
+  Serial.println("Function for UID 20 executed");
+}
+
+void onUid21Detected() {
+  Serial.println("Function for UID 21 executed");
 }
 
 void onUnknownUidDetected() {

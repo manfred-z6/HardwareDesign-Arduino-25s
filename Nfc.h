@@ -41,6 +41,24 @@ void registerUidFunctions(); // 注册所有UID和对应的函数
 void onUid1Detected();
 void onUid2Detected();
 void onUid3Detected();
+void onUid4Detected();
+void onUid5Detected();
+void onUid6Detected();
+void onUid7Detected();
+void onUid8Detected();
+void onUid9Detected();
+void onUid10Detected();
+void onUid11Detected();
+void onUid12Detected();
+void onUid13Detected();
+void onUid14Detected();
+void onUid15Detected();
+void onUid16Detected();
+void onUid17Detected();
+void onUid18Detected();
+void onUid19Detected();
+void onUid20Detected();
+void onUid21Detected();
 void onUnknownUidDetected();
 
 #endif
