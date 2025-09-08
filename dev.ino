@@ -89,6 +89,7 @@ void loop() {
       updateSequences();
       break;
     }
+    default: break;
   }
 }
 
@@ -102,9 +103,13 @@ void onClick1() {
 }
 void onLongPress1() {
   Serial.println("Button1 long-pressed");
-  if(state == MENU) {
-    state = PLOT;
-    //执行剧本函数
+  switch(state){
+    case MENU: {
+      state = PLOT;
+      Serial.println("已进入剧情模式");
+      break;
+    }
+    default: break;
   }
 }
 
@@ -113,14 +118,20 @@ void onClick2() {
 }
 void onLongPress2() {
   Serial.println("Button2 long-pressed");
-  if(state == MENU) {
-    state = GAME;
-    // 初始化游戏
-    game.initializeGame();
-    // 显示初始状态
-    showGameStatus();
-  }
-  if(state == GAME) {
-    state == MENU;
+  switch(state){
+    case MENU: {
+      state = GAME;
+      // 初始化游戏
+      game.initializeGame();
+      // 显示初始状态
+      showGameStatus();
+      break;
+    }
+    case GAME: {
+      state = MENU;
+      Serial.println("已返回菜单");
+      break;
+    }
+    default: break;
   }
 }

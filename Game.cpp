@@ -32,8 +32,8 @@ void Character::die() {
 
 void Character::revive() {
     isAlive = true;
-    hp = maxHp / 2; // 复活后生命值为最大值的一半
-    skillUsed = false;
+    hp = maxHp; // 复活后生命值为最大值
+    skillUsed = true;
     Serial.print(name);
     Serial.println("已被复活！");
 }
@@ -258,6 +258,7 @@ void Game::initializeGame() {
     
     Serial.println("游戏初始化完成！");
     Serial.println("三英战吕布开始！");
+    Serial.println("--- 吕布的回合 ---");
 }
 
 void Game::checkGameState() {
@@ -343,7 +344,7 @@ void Game::lubuSkill2(int targetIndex) {
 
 // 刘备动作实现
 void Game::liuBeiAttack() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
     
     liuBei->attack(lubu);
     nextTurn();
@@ -351,7 +352,7 @@ void Game::liuBeiAttack() {
 }
 
 void Game::liuBeiHeal() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
     
     liuBei->heal();
     nextTurn();
@@ -359,7 +360,7 @@ void Game::liuBeiHeal() {
 }
 
 void Game::liuBeiSkill1() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
     
     if (static_cast<LiuBei*>(liuBei)->skill1()) {
         // 为我方全体恢复10点生命值
@@ -373,7 +374,7 @@ void Game::liuBeiSkill1() {
 }
 
 void Game::liuBeiSkill2(int targetIndex) {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
     
     Character* target = nullptr;
     switch (targetIndex) {
@@ -389,7 +390,7 @@ void Game::liuBeiSkill2(int targetIndex) {
 
 // 关羽动作实现
 void Game::guanYuAttack() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
     
     guanYu->attack(lubu);
     nextTurn();
@@ -397,7 +398,7 @@ void Game::guanYuAttack() {
 }
 
 void Game::guanYuHeal() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
     
     guanYu->heal();
     nextTurn();
@@ -405,7 +406,7 @@ void Game::guanYuHeal() {
 }
 
 void Game::guanYuSkill1() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
     
     if (static_cast<GuanYu*>(guanYu)->skill1()) {
         lubu->takeDamage(24);
@@ -415,7 +416,7 @@ void Game::guanYuSkill1() {
 }
 
 void Game::guanYuSkill2() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
     
     if (static_cast<GuanYu*>(guanYu)->skill2(nullptr)) {
         nextTurn();
@@ -425,7 +426,7 @@ void Game::guanYuSkill2() {
 
 // 张飞动作实现
 void Game::zhangFeiAttack() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
     
     zhangFei->attack(lubu);
     nextTurn();
@@ -433,7 +434,7 @@ void Game::zhangFeiAttack() {
 }
 
 void Game::zhangFeiHeal() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
     
     zhangFei->heal();
     nextTurn();
@@ -441,7 +442,7 @@ void Game::zhangFeiHeal() {
 }
 
 void Game::zhangFeiSkill1() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver || !zhangFei->alive()) return;
     
     if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
         static_cast<LuBu*>(lubu)->setNextAttackReduced(true);
@@ -451,7 +452,7 @@ void Game::zhangFeiSkill1() {
 }
 
 void Game::zhangFeiSkill2() {
-    if (isLuBuTurn || gameOver) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
     
     if (static_cast<ZhangFei*>(zhangFei)->skill2(nullptr)) {
         static_cast<LuBu*>(lubu)->setAllAttacksReduced(true);

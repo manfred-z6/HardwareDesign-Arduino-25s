@@ -29,7 +29,7 @@ public:
     void restoreHp(int amount);
     void markSkillUsed() { skillUsed = true; }
     virtual void die();
-    virtual void revive(); // 添加 revive 方法声明
+    virtual void revive(); 
     
     // 纯虚函数 - 必须在派生类中实现
     virtual void attack(Character* target) = 0;
