@@ -518,3 +518,68 @@ void showGameStatus() {
   Serial.println(game.getGuanYuStatus());
   Serial.println(game.getZhangFeiStatus());
 }
+
+String Game::getLuBuStatusForDisplay() const {
+    String status = "LV:HP";
+    status += lubu->getHp();
+    status += "/";
+    status += lubu->getMaxHp();
+    status += " A:";
+    status += lubu->getAttackDamage();
+    status += " S:";
+    status += static_cast<LuBu*>(lubu)->getSkillCount();
+    return status;
+}
+
+String Game::getLiuBeiStatusForDisplay() const {
+    String status = "LB:HP";
+    status += liuBei->getHp();
+    status += "/";
+    status += liuBei->getMaxHp();
+    status += " A:";
+    status += liuBei->getAttackDamage();
+    status += " S:";
+    status += liuBei->isSkillUsed() ? "0" : "1";
+    return status;
+}
+
+String Game::getGuanYuStatusForDisplay() const {
+    String status = "GY:HP";
+    status += guanYu->getHp();
+    status += "/";
+    status += guanYu->getMaxHp();
+    status += " A:";
+    status += guanYu->getAttackDamage();
+    status += " S:";
+    status += guanYu->isSkillUsed() ? "0" : "1";
+    return status;
+}
+
+String Game::getZhangFeiStatusForDisplay() const {
+    String status = "ZF:HP";
+    status += zhangFei->getHp();
+    status += "/";
+    status += zhangFei->getMaxHp();
+    status += " A:";
+    status += zhangFei->getAttackDamage();
+    status += " S:";
+    status += zhangFei->isSkillUsed() ? "0" : "1";
+    return status;
+}
+
+// 在Game.cpp文件末尾添加以下方法实现
+bool Game::isLuBuAlive() const {
+    return lubu->alive();
+}
+
+bool Game::isLiuBeiAlive() const {
+    return liuBei->alive();
+}
+
+bool Game::isGuanYuAlive() const {
+    return guanYu->alive();
+}
+
+bool Game::isZhangFeiAlive() const {
+    return zhangFei->alive();
+}

@@ -2,6 +2,7 @@
 #include <Adafruit_PWMServoDriver.h>
 #include <Adafruit_PN532.h>
 #include <OneButton.h>
+#include <U8glib.h>
 #include "Action_people.h"
 #include "Slider.h"
 #include "Nfc.h"
@@ -11,6 +12,8 @@
 // 创建硬件对象
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
+U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI 
+
 
 // 按钮定义
 #define BUTTON_1 5
@@ -26,6 +29,14 @@ enum state_mode {
   PLOT
 };
 state_mode state = MENU;
+
+// NFC读取计时器
+unsigned long lastNfcReadTime = 0;
+const unsigned long NFC_READ_INTERVAL = 100; // NFC读取间隔(毫秒)
+
+// OLED更新计时器
+unsigned long lastOledUpdateTime = 0;
+const unsigned long OLED_UPDATE_INTERVAL = 200; // OLED更新间隔(毫秒)
 
 void setup() {
   Serial.begin(115200);
@@ -57,9 +68,12 @@ void loop() {
   //处理按钮事件
   button1.tick();
   button2.tick();
+
+  unsigned long currentTime = millis();
+
   switch(state){
     case MENU:{
-      menu();
+      menu_main();
       break;
     }
     case GAME:{
@@ -71,6 +85,13 @@ void loop() {
       updateSliderSequences();
       // 更新所有动作序列状态
       updateSequences();
+
+      // 定期更新OLED显示，避免频繁更新影响NFC读取
+      if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL) {
+        displayGameStatus();
+        lastOledUpdateTime = currentTime;
+      }
+
       // 只有在没有序列运行时，才更新NFC状态
       if(!game.isGameOver()) {
         if (!isAnySequenceRunning) {
@@ -80,9 +101,11 @@ void loop() {
         Serial.println("游戏结束！");
         state = MENU;
       }
+
       break;
     }
     case PLOT:{
+      menu_plot();
       //更新所有滑块序列状态
       updateSliderSequences();
       //更新所有动作序列状态
@@ -93,13 +116,68 @@ void loop() {
   }
 }
 
-void menu() {
-  
+void menu_main() {
+  u8g.firstPage();
+  do{
+    u8g.setFont(u8g_font_6x10);
+    u8g.drawStr(8, 15, "1.PLOT MODE");
+    u8g.drawStr(8, 30, "(Long Press Button1)");
+    u8g.drawStr(8, 45, "2.GAME MODE");
+    u8g.drawStr(8, 60, "(Long Press Button2)");
+  }while(u8g.nextPage());
+}
+
+void displayGameStatus(){
+  u8g.firstPage();
+  do {
+    u8g.setFont(u8g_font_6x10);
+    
+    // 显示吕布状态
+    u8g.drawStr(0, 20, game.getLuBuStatusForDisplay().c_str());
+    
+    // 显示刘备状态
+    u8g.drawStr(0, 34, game.getLiuBeiStatusForDisplay().c_str());
+    
+    // 显示关羽状态
+    u8g.drawStr(0, 48, game.getGuanYuStatusForDisplay().c_str());
+    
+    // 显示张飞状态
+    u8g.drawStr(0, 62, game.getZhangFeiStatusForDisplay().c_str());
+    
+    // 显示当前回合
+    u8g.setFont(u8g_font_6x10);
+    if (game.getIsLuBuTurn()) {
+      u8g.drawStr(32, 10, "LVBU Turn");
+    } else {
+      u8g.drawStr(32, 10, "HERO Turn");
+    }
+    
+    // 显示游戏状态（如果游戏结束）
+    if (game.isGameOver()) {
+      u8g.setFont(u8g_font_6x10);
+      if (!game.isLuBuAlive()) {
+        u8g.drawStr(90, 22, "Hero Win!");
+      } else if (!game.isLiuBeiAlive() && 
+                 !game.isGuanYuAlive() && 
+                 !game.isZhangFeiAlive()) {
+        u8g.drawStr(90, 22, "LVBU Win!");
+      }
+    }
+  } while(u8g.nextPage());
+}
+
+void menu_plot(){
+  u8g.firstPage();
+  do{
+    u8g.setFont(u8g_font_10x20);
+    u8g.drawStr(4, 32, "PLOT MODE");
+  }while(u8g.nextPage());
 }
 
 // 按钮回调函数
 void onClick1() {
   Serial.println("Button1 clicked");
+  startSequence(action_attack_1());
 }
 void onLongPress1() {
   Serial.println("Button1 long-pressed");

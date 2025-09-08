@@ -24,6 +24,8 @@ public:
     int getHp() const { return hp; }
     int getMaxHp() const { return maxHp; }
     bool isSkillUsed() const { return skillUsed; }
+    int getAttackDamage() const { return attackDamage; }
+    int getHealAmount() const { return healAmount; }
     
     void takeDamage(int damage);
     void restoreHp(int amount);
@@ -99,6 +101,18 @@ public:
     LiuBei* getLiuBei() const { return liuBei; }
     GuanYu* getGuanYu() const { return guanYu; }
     ZhangFei* getZhangFei() const { return zhangFei; }
+
+    // 添加获取角色状态信息的方法
+    String getLuBuStatusForDisplay() const;
+    String getLiuBeiStatusForDisplay() const;
+    String getGuanYuStatusForDisplay() const;
+    String getZhangFeiStatusForDisplay() const;
+
+    // 在Game类中添加以下方法声明
+    bool isLuBuAlive() const;
+    bool isLiuBeiAlive() const;
+    bool isGuanYuAlive() const;
+    bool isZhangFeiAlive() const;
 };
 
 // 声明全局游戏对象
