@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 unsigned long lastAudioEndTime = 0;
-const unsigned long AUDIO_COOLDOWN = 4500; // 冷却时间
+const unsigned long AUDIO_COOLDOWN = 370; // 冷却时间
 
 // 定义全局游戏对象
 Game game;
@@ -126,12 +126,14 @@ public:
         Serial.println("造成4点伤害！");
         target->takeDamage(attackDamage);
         musicPlayer.playTrackOnce(7);
+        lastAudioEndTime = millis();
     }
     
     void heal() override {
         Serial.println("刘备回血，恢复8点生命值！");
         restoreHp(healAmount);
         musicPlayer.playTrackOnce(8);
+        lastAudioEndTime = millis();
     }
     
     bool skill1() override {
@@ -389,6 +391,7 @@ void Game::lubuHeal() {
         return;
     }
     musicPlayer.playTrackOnce(4);
+    lastAudioEndTime = millis();
     lubu->heal();
     nextTurn();
     checkGameState();
@@ -476,6 +479,7 @@ void Game::liuBeiSkill1() {
         if (guanYu->alive()) guanYu->restoreHp(10);
         if (zhangFei->alive()) zhangFei->restoreHp(10);
         musicPlayer.playTrackOnce(9);
+        lastAudioEndTime = millis();
         nextTurn();
         checkGameState();
     } 
@@ -495,6 +499,7 @@ void Game::liuBeiSkill2(int targetIndex) {
     
     if (target && !target->alive() && static_cast<LiuBei*>(liuBei)->skill2(target)) {
         musicPlayer.playTrackOnce(10);
+        lastAudioEndTime = millis();
         nextTurn();
         checkGameState();
     } 
@@ -508,6 +513,7 @@ void Game::guanYuAttack() {
     }
 
     musicPlayer.playTrackOnce(11);
+    lastAudioEndTime = millis();
 
     guanYu->attack(lubu);
     nextTurn();
@@ -522,6 +528,7 @@ void Game::guanYuHeal() {
     }
     
     musicPlayer.playTrackOnce(12);
+    lastAudioEndTime = millis();
 
     guanYu->heal();
     nextTurn();
@@ -537,6 +544,7 @@ void Game::guanYuSkill1() {
 
     if (static_cast<GuanYu*>(guanYu)->skill1()) {
         musicPlayer.playTrackOnce(13);
+        lastAudioEndTime = millis();
         lubu->takeDamage(24);
         nextTurn();
         checkGameState();
@@ -551,6 +559,7 @@ void Game::guanYuSkill2() {
 
     if (static_cast<GuanYu*>(guanYu)->skill2(nullptr)) {
         musicPlayer.playTrackOnce(14);
+        lastAudioEndTime = millis();
         nextTurn();
         checkGameState();
     } 
@@ -564,6 +573,7 @@ void Game::zhangFeiAttack() {
     }
     
     musicPlayer.playTrackOnce(15);
+    lastAudioEndTime = millis();
 
     zhangFei->attack(lubu);
     nextTurn();
@@ -578,6 +588,7 @@ void Game::zhangFeiHeal() {
     }
     
     musicPlayer.playTrackOnce(16);
+    lastAudioEndTime = millis();
 
     zhangFei->heal();
     nextTurn();
@@ -593,6 +604,7 @@ void Game::zhangFeiSkill1() {
 
     if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
         musicPlayer.playTrackOnce(17);
+        lastAudioEndTime = millis();
         static_cast<LuBu*>(lubu)->setNextAttackReduced(true);
         nextTurn();
         checkGameState();
@@ -607,6 +619,7 @@ void Game::zhangFeiSkill2() {
 
     if (static_cast<ZhangFei*>(zhangFei)->skill2(nullptr)) {
         musicPlayer.playTrackOnce(18);
+        lastAudioEndTime = millis();
         static_cast<LuBu*>(lubu)->setAllAttacksReduced(true);
         nextTurn();
         checkGameState();
