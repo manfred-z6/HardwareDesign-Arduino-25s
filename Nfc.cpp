@@ -1,5 +1,6 @@
 #include "Nfc.h"
 #include "Game.h"
+#include "Music.h"
 // 定义全局变量
 const unsigned long REQUIRED_DETECTION_TIME = 1000; // 需要连续检测到卡片500ms才算有效
 
@@ -147,7 +148,7 @@ void onUid1Detected() {
   // 第一张卡的函数 - 后续可以修改为具体实现
   Serial.println("Function for UID 1 executed");
   game.lubuSkill1();
-  showGameStatus();
+  showGameStatus(); 
 }
 
 void onUid2Detected() {

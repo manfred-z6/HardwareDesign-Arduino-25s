@@ -119,5 +119,6 @@ public:
 extern Game game;
 // 显示游戏人物状态
 void showGameStatus();
+void music_error();
 
 #endif

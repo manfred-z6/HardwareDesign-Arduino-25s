@@ -164,8 +164,8 @@ void stopSequence(int sequenceIndex) {
 // 具体动作序列
 int action_attack_1() {
   RotationAction actions[2];
-  actions[0] = {0, 1, 60, 400};  // 舵机0逆时针
-  actions[1] = {0, 0, 100, 300}; // 舵机0顺时针
+  actions[0] = {0, 1, 40, 400};  // 舵机0逆时针
+  actions[1] = {0, 0, 50, 500}; // 舵机0顺时针
   return addActionSequence(actions, 2);
 }
 

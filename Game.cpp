@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Music.h"
 #include <Arduino.h>
 
 // 定义全局游戏对象
@@ -98,6 +99,13 @@ public:
     void setNextAttackReduced(bool reduced) { nextAttackReduced = reduced; }
     void setAllAttacksReduced(bool reduced) { allAttacksReduced = reduced; }
     int getSkillCount() const { return skillCount; }
+
+    void die() {
+        isAlive = false;
+        Serial.print(name);
+        Serial.println("已战败！");
+        musicPlayer.playTrackOnce(19);
+    }
 };
 
 // 刘备类
@@ -143,6 +151,13 @@ public:
             Serial.println("目标尚未死亡，无法复活！");
             return false;
         }
+    }
+
+    void die() {
+        isAlive = false;
+        Serial.print(name);
+        Serial.println("已战败！");
+        musicPlayer.playTrackOnce(20);
     }
 };
 
@@ -196,6 +211,13 @@ public:
         markSkillUsed();
         return true;
     }
+
+    void die() {
+        isAlive = false;
+        Serial.print(name);
+        Serial.println("已战败！");
+        musicPlayer.playTrackOnce(21);
+    }
 };
 
 // 张飞类
@@ -234,6 +256,13 @@ public:
         markSkillUsed();
         return true;
     }
+
+    void die() {
+        isAlive = false;
+        Serial.print(name);
+        Serial.println("已战败！");
+        musicPlayer.playTrackOnce(22);
+    }
 };
 
 // Game 类成员函数实现
@@ -259,17 +288,20 @@ void Game::initializeGame() {
     Serial.println("游戏初始化完成！");
     Serial.println("三英战吕布开始！");
     Serial.println("--- 吕布的回合 ---");
+    musicPlayer.playTrackOnce(25);
 }
 
 void Game::checkGameState() {
     if (!lubu->alive()) {
         Serial.println("吕布已败，三英胜利！");
+        musicPlayer.playTrackOnce(24);
         gameOver = true;
         return;
     }
     
     if (!liuBei->alive() && !guanYu->alive() && !zhangFei->alive()) {
         Serial.println("三英已全部战败，吕布胜利！");
+        musicPlayer.playTrackOnce(23);
         gameOver = true;
         return;
     }
@@ -286,7 +318,10 @@ void Game::nextTurn() {
 
 // 吕布动作实现
 void Game::lubuAttack(int heroIndex) {
-    if (!isLuBuTurn || gameOver) return;
+    if (!isLuBuTurn || gameOver) { 
+        music_error();
+        return;
+    }
     
     Character* target = nullptr;
     switch (heroIndex) {
@@ -300,18 +335,28 @@ void Game::lubuAttack(int heroIndex) {
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(3);
 }
 
 void Game::lubuHeal() {
-    if (!isLuBuTurn || gameOver) return;
+    if (!isLuBuTurn || gameOver) {
+        music_error();
+        return;
+    }
     
     lubu->heal();
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(4);
 }
 
 void Game::lubuSkill1() {
-    if (!isLuBuTurn || gameOver) return;
+    if (!isLuBuTurn || gameOver) {
+        music_error();
+        return;
+    }
     
     if (static_cast<LuBu*>(lubu)->skill1()) {
         // 对全体英雄造成伤害
@@ -321,11 +366,15 @@ void Game::lubuSkill1() {
         
         nextTurn();
         checkGameState();
-    }
+    }  
+    musicPlayer.playTrackOnce(5);
 }
 
 void Game::lubuSkill2(int targetIndex) {
-    if (!isLuBuTurn || gameOver) return;
+    if (!isLuBuTurn || gameOver) {
+        music_error();
+        return;
+    }
     
     Character* target = nullptr;
     switch (targetIndex) {
@@ -340,27 +389,42 @@ void Game::lubuSkill2(int targetIndex) {
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(6);
 }
 
 // 刘备动作实现
 void Game::liuBeiAttack() {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) {
+        music_error();
+        return;
+    }
     
     liuBei->attack(lubu);
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(7);
 }
 
 void Game::liuBeiHeal() {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) {
+        music_error();
+        return;
+    }
     
     liuBei->heal();
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(8);
 }
 
 void Game::liuBeiSkill1() {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) {
+        music_error();
+        return;
+    }
     
     if (static_cast<LiuBei*>(liuBei)->skill1()) {
         // 为我方全体恢复10点生命值
@@ -371,10 +435,15 @@ void Game::liuBeiSkill1() {
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(9);
 }
 
 void Game::liuBeiSkill2(int targetIndex) {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) return;
+    if (isLuBuTurn || gameOver || !liuBei->alive()) {
+        music_error();
+        return;
+    }
     
     Character* target = nullptr;
     switch (targetIndex) {
@@ -386,79 +455,121 @@ void Game::liuBeiSkill2(int targetIndex) {
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(10);
 }
 
 // 关羽动作实现
 void Game::guanYuAttack() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+        music_error();
+        return;
+    }
     
     guanYu->attack(lubu);
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(11);
 }
 
 void Game::guanYuHeal() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+        music_error();
+        return;
+    }
     
     guanYu->heal();
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(12);
 }
 
 void Game::guanYuSkill1() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+        music_error();
+        return;
+    }
     
     if (static_cast<GuanYu*>(guanYu)->skill1()) {
         lubu->takeDamage(24);
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(13);
 }
 
 void Game::guanYuSkill2() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) return;
+    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+        music_error();
+        return;
+    }
     
     if (static_cast<GuanYu*>(guanYu)->skill2(nullptr)) {
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(14);
 }
 
 // 张飞动作实现
 void Game::zhangFeiAttack() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
+        music_error();
+        return;
+    }
     
     zhangFei->attack(lubu);
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(15);
 }
 
 void Game::zhangFeiHeal() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
+        music_error();
+        return;
+    }
     
     zhangFei->heal();
     nextTurn();
     checkGameState();
+
+    musicPlayer.playTrackOnce(16);
 }
 
 void Game::zhangFeiSkill1() {
-    if (isLuBuTurn || gameOver || !zhangFei->alive()) return;
+    if (isLuBuTurn || gameOver || !zhangFei->alive()) {
+        music_error();
+        return;
+    }
     
     if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
         static_cast<LuBu*>(lubu)->setNextAttackReduced(true);
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(17);
 }
 
 void Game::zhangFeiSkill2() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) return;
+    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
+        music_error();
+        return;
+    }
     
     if (static_cast<ZhangFei*>(zhangFei)->skill2(nullptr)) {
         static_cast<LuBu*>(lubu)->setAllAttacksReduced(true);
         nextTurn();
         checkGameState();
     }
+
+    musicPlayer.playTrackOnce(18);
 }
 
 // 状态获取方法
@@ -582,4 +693,8 @@ bool Game::isGuanYuAlive() const {
 
 bool Game::isZhangFeiAlive() const {
     return zhangFei->alive();
+}
+
+void music_error(){
+    musicPlayer.playTrackOnce(2);
 }

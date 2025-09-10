@@ -8,6 +8,10 @@
 #include "Nfc.h"
 #include "Game.h"
 #include "GlobalVars.h"
+#include "Music.h"
+
+// 音乐播放器全局变量
+#define MUSIC_SERIAL Serial1    //使用Mega的Serial1硬件串口
 
 // 创建硬件对象
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
@@ -62,12 +66,23 @@ void setup() {
   // 初始化NFC模块
   NFC_Init(); // 使用Nfc.cpp中定义的初始化函数
   Serial.println("System Initialization Complete.");
+
+  // 初始化音乐播放器
+  MUSIC_SERIAL.begin(9600);
+  if (!musicPlayer.begin(MUSIC_SERIAL)) {
+    Serial.println(F("音乐播放器初始化失败，系统继续运行但无音频功能"));
+  } else {
+    Serial.println(F("音乐播放器初始化成功"));
+  }
 }
 
 void loop() {  
   //处理按钮事件
   button1.tick();
   button2.tick();
+
+  // 检查音乐播放状态
+  musicPlayer.checkPlayingStatus();
 
   unsigned long currentTime = millis();
 
@@ -94,7 +109,7 @@ void loop() {
 
       // 只有在没有序列运行时，才更新NFC状态
       if(!game.isGameOver()) {
-        if (!isAnySequenceRunning) {
+        if (!isAnySequenceRunning && !musicPlayer.isCurrentlyPlaying()) {
           updatenfc();
         }
       } else {
@@ -193,6 +208,7 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println("Button2 clicked");
+  startSequence(action_back_lb());
 }
 void onLongPress2() {
   Serial.println("Button2 long-pressed");
