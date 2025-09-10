@@ -1,6 +1,10 @@
 #include "Game.h"
 #include "Music.h"
+#include "GlobalVars.h"
 #include <Arduino.h>
+
+unsigned long lastAudioEndTime = 0;
+const unsigned long AUDIO_COOLDOWN = 4500; // 冷却时间
 
 // 定义全局游戏对象
 Game game;
@@ -67,6 +71,9 @@ public:
         Serial.println("点伤害！");
         
         target->takeDamage(damage);
+
+        musicPlayer.playTrackOnce(3);
+        lastAudioEndTime = millis();
     }
     
     void heal() override {
@@ -104,7 +111,7 @@ public:
         isAlive = false;
         Serial.print(name);
         Serial.println("已战败！");
-        musicPlayer.playTrackOnce(19);
+        //musicPlayer.playTrackOnce(19);
     }
 };
 
@@ -118,11 +125,13 @@ public:
         Serial.print(target->getName());
         Serial.println("造成4点伤害！");
         target->takeDamage(attackDamage);
+        musicPlayer.playTrackOnce(7);
     }
     
     void heal() override {
         Serial.println("刘备回血，恢复8点生命值！");
         restoreHp(healAmount);
+        musicPlayer.playTrackOnce(8);
     }
     
     bool skill1() override {
@@ -146,7 +155,12 @@ public:
             Serial.println("！");
             target->revive();
             markSkillUsed();
-            return true;
+            if(target->getName() == "关羽"){
+                flag3 = 1;
+            }
+            if(target->getName() == "张飞"){
+                flag4 = 1;
+            }
         } else {
             Serial.println("目标尚未死亡，无法复活！");
             return false;
@@ -157,7 +171,7 @@ public:
         isAlive = false;
         Serial.print(name);
         Serial.println("已战败！");
-        musicPlayer.playTrackOnce(20);
+        //musicPlayer.playTrackOnce(20);
     }
 };
 
@@ -216,7 +230,7 @@ public:
         isAlive = false;
         Serial.print(name);
         Serial.println("已战败！");
-        musicPlayer.playTrackOnce(21);
+        //musicPlayer.playTrackOnce(21);
     }
 };
 
@@ -261,7 +275,7 @@ public:
         isAlive = false;
         Serial.print(name);
         Serial.println("已战败！");
-        musicPlayer.playTrackOnce(22);
+        //musicPlayer.playTrackOnce(22);
     }
 };
 
@@ -282,6 +296,11 @@ void Game::initializeGame() {
     guanYu = new GuanYu();
     zhangFei = new ZhangFei();
     
+    flag1 = 1;
+    flag2 = 1;
+    flag3 = 1;
+    flag4 = 1;
+
     isLuBuTurn = true;
     gameOver = false;
     
@@ -292,16 +311,43 @@ void Game::initializeGame() {
 }
 
 void Game::checkGameState() {
-    if (!lubu->alive()) {
+    if(flag1&&!musicPlayer.isCurrentlyPlaying()&&!lubu->alive() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN)
+    {
+        musicPlayer.playTrackOnce(19);
+        flag1 = 0;
+        lastAudioEndTime = millis();
+        return;
+    }
+    if(flag2&&!musicPlayer.isCurrentlyPlaying()&&!liuBei->alive() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN)
+    {
+        musicPlayer.playTrackOnce(20);
+        flag2 = 0;
+        lastAudioEndTime = millis();
+        return;
+    }
+    if(flag3&&!musicPlayer.isCurrentlyPlaying()&&!guanYu->alive() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN)
+    {
+        musicPlayer.playTrackOnce(21);
+        flag3 = 0;
+        lastAudioEndTime = millis();
+        return;
+    }
+    if(flag4&&!musicPlayer.isCurrentlyPlaying()&&!zhangFei->alive() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN)
+    {
+        musicPlayer.playTrackOnce(22);
+        flag4 = 0;
+        lastAudioEndTime = millis();
+        return;
+    }
+
+    if (!lubu->alive() && !musicPlayer.isCurrentlyPlaying() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN) {
         Serial.println("吕布已败，三英胜利！");
-        musicPlayer.playTrackOnce(24);
         gameOver = true;
         return;
     }
     
-    if (!liuBei->alive() && !guanYu->alive() && !zhangFei->alive()) {
+    if (!liuBei->alive() && !guanYu->alive() && !zhangFei->alive() && !musicPlayer.isCurrentlyPlaying() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN) {
         Serial.println("三英已全部战败，吕布胜利！");
-        musicPlayer.playTrackOnce(23);
         gameOver = true;
         return;
     }
@@ -318,25 +364,23 @@ void Game::nextTurn() {
 
 // 吕布动作实现
 void Game::lubuAttack(int heroIndex) {
-    if (!isLuBuTurn || gameOver) { 
-        music_error();
-        return;
-    }
-    
     Character* target = nullptr;
     switch (heroIndex) {
         case 0: target = liuBei; break;
         case 1: target = guanYu; break;
         case 2: target = zhangFei; break;
     }
+
+    if (!isLuBuTurn || gameOver || !target->alive()) { 
+        music_error();
+        return;
+    }
     
     if (target && target->alive()) {
         lubu->attack(target);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(3);
+    } 
 }
 
 void Game::lubuHeal() {
@@ -344,38 +388,40 @@ void Game::lubuHeal() {
         music_error();
         return;
     }
-    
+    musicPlayer.playTrackOnce(4);
     lubu->heal();
     nextTurn();
     checkGameState();
 
-    musicPlayer.playTrackOnce(4);
 }
 
 void Game::lubuSkill1() {
-    if (!isLuBuTurn || gameOver) {
+    if (!isLuBuTurn || gameOver || (lubu->getSkillCount() == 0)) {
         music_error();
         return;
-    }
-    
+    }    
+
     if (static_cast<LuBu*>(lubu)->skill1()) {
+        musicPlayer.playTrackOnce(5);
+        lastAudioEndTime = millis();
         // 对全体英雄造成伤害
         if (liuBei->alive()) liuBei->takeDamage(8);
         if (guanYu->alive()) guanYu->takeDamage(8);
         if (zhangFei->alive()) zhangFei->takeDamage(8);
-        
+
         nextTurn();
         checkGameState();
-    }  
-    musicPlayer.playTrackOnce(5);
+    }  else {
+        music_error();
+    }
 }
 
 void Game::lubuSkill2(int targetIndex) {
-    if (!isLuBuTurn || gameOver) {
+    if (!isLuBuTurn || gameOver || (lubu->getSkillCount() == 0)) {
         music_error();
         return;
     }
-    
+
     Character* target = nullptr;
     switch (targetIndex) {
         case 0: target = liuBei; break;
@@ -384,13 +430,13 @@ void Game::lubuSkill2(int targetIndex) {
     }
     
     if (target && target->alive() && static_cast<LuBu*>(lubu)->skill2(target)) {
+        musicPlayer.playTrackOnce(6);
+        lastAudioEndTime = millis();
         target->takeDamage(12);
         lubu->restoreHp(6);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(6);
+    } 
 }
 
 // 刘备动作实现
@@ -399,12 +445,11 @@ void Game::liuBeiAttack() {
         music_error();
         return;
     }
-    
+
     liuBei->attack(lubu);
     nextTurn();
     checkGameState();
 
-    musicPlayer.playTrackOnce(7);
 }
 
 void Game::liuBeiHeal() {
@@ -412,51 +457,47 @@ void Game::liuBeiHeal() {
         music_error();
         return;
     }
-    
+
     liuBei->heal();
     nextTurn();
     checkGameState();
 
-    musicPlayer.playTrackOnce(8);
 }
 
 void Game::liuBeiSkill1() {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) {
+    if (isLuBuTurn || gameOver || !liuBei->alive() || liuBei->isSkillUsed()) {
         music_error();
         return;
     }
-    
+
     if (static_cast<LiuBei*>(liuBei)->skill1()) {
         // 为我方全体恢复10点生命值
         if (liuBei->alive()) liuBei->restoreHp(10);
         if (guanYu->alive()) guanYu->restoreHp(10);
         if (zhangFei->alive()) zhangFei->restoreHp(10);
-        
+        musicPlayer.playTrackOnce(9);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(9);
+    } 
 }
 
 void Game::liuBeiSkill2(int targetIndex) {
-    if (isLuBuTurn || gameOver || !liuBei->alive()) {
-        music_error();
-        return;
-    }
-    
     Character* target = nullptr;
     switch (targetIndex) {
         case 1: target = guanYu; break;
         case 2: target = zhangFei; break;
     }
+
+    if (isLuBuTurn || gameOver || !liuBei->alive() || liuBei->isSkillUsed() || target->alive()) {
+        music_error();
+        return;
+    }
     
     if (target && !target->alive() && static_cast<LiuBei*>(liuBei)->skill2(target)) {
+        musicPlayer.playTrackOnce(10);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(10);
+    } 
 }
 
 // 关羽动作实现
@@ -465,12 +506,13 @@ void Game::guanYuAttack() {
         music_error();
         return;
     }
-    
+
+    musicPlayer.playTrackOnce(11);
+
     guanYu->attack(lubu);
     nextTurn();
     checkGameState();
 
-    musicPlayer.playTrackOnce(11);
 }
 
 void Game::guanYuHeal() {
@@ -479,97 +521,96 @@ void Game::guanYuHeal() {
         return;
     }
     
+    musicPlayer.playTrackOnce(12);
+
     guanYu->heal();
     nextTurn();
     checkGameState();
 
-    musicPlayer.playTrackOnce(12);
 }
 
 void Game::guanYuSkill1() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+    if (isLuBuTurn || gameOver || !guanYu->alive() || guanYu->isSkillUsed()) {
         music_error();
         return;
     }
-    
+
     if (static_cast<GuanYu*>(guanYu)->skill1()) {
+        musicPlayer.playTrackOnce(13);
         lubu->takeDamage(24);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(13);
+    } 
 }
 
 void Game::guanYuSkill2() {
-    if (isLuBuTurn || gameOver || !guanYu->alive()) {
+    if (isLuBuTurn || gameOver || !guanYu->alive() || guanYu->isSkillUsed()) {
         music_error();
         return;
     }
-    
+
     if (static_cast<GuanYu*>(guanYu)->skill2(nullptr)) {
+        musicPlayer.playTrackOnce(14);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(14);
+    } 
 }
 
 // 张飞动作实现
 void Game::zhangFeiAttack() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
-        music_error();
-        return;
-    }
-    
-    zhangFei->attack(lubu);
-    nextTurn();
-    checkGameState();
-
-    musicPlayer.playTrackOnce(15);
-}
-
-void Game::zhangFeiHeal() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
-        music_error();
-        return;
-    }
-    
-    zhangFei->heal();
-    nextTurn();
-    checkGameState();
-
-    musicPlayer.playTrackOnce(16);
-}
-
-void Game::zhangFeiSkill1() {
     if (isLuBuTurn || gameOver || !zhangFei->alive()) {
         music_error();
         return;
     }
     
-    if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
-        static_cast<LuBu*>(lubu)->setNextAttackReduced(true);
-        nextTurn();
-        checkGameState();
-    }
+    musicPlayer.playTrackOnce(15);
 
-    musicPlayer.playTrackOnce(17);
+    zhangFei->attack(lubu);
+    nextTurn();
+    checkGameState();
+
 }
 
-void Game::zhangFeiSkill2() {
-    if (isLuBuTurn || gameOver  || !zhangFei->alive()) {
+void Game::zhangFeiHeal() {
+    if (isLuBuTurn || gameOver || !zhangFei->alive()) {
         music_error();
         return;
     }
     
+    musicPlayer.playTrackOnce(16);
+
+    zhangFei->heal();
+    nextTurn();
+    checkGameState();
+
+}
+
+void Game::zhangFeiSkill1() {
+    if (isLuBuTurn || gameOver || !zhangFei->alive() || zhangFei->isSkillUsed()) {
+        music_error();
+        return;
+    }
+
+    if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
+        musicPlayer.playTrackOnce(17);
+        static_cast<LuBu*>(lubu)->setNextAttackReduced(true);
+        nextTurn();
+        checkGameState();
+    } 
+}
+
+void Game::zhangFeiSkill2() {
+    if (isLuBuTurn || gameOver || !zhangFei->alive() || zhangFei->isSkillUsed()) {
+        music_error();
+        return;
+    }
+
     if (static_cast<ZhangFei*>(zhangFei)->skill2(nullptr)) {
+        musicPlayer.playTrackOnce(18);
         static_cast<LuBu*>(lubu)->setAllAttacksReduced(true);
         nextTurn();
         checkGameState();
-    }
-
-    musicPlayer.playTrackOnce(18);
+    } 
 }
 
 // 状态获取方法

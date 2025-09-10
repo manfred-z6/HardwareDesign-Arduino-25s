@@ -27,6 +27,8 @@ OneButton button2(BUTTON_2, true, true);
 
 //定义全局变量
 volatile bool isAnySequenceRunning = false; //判断是否有动作序列在执行
+volatile bool flag1, flag2, flag3, flag4;
+
 enum state_mode {
   MENU,
   GAME,
@@ -76,6 +78,8 @@ void setup() {
   }
 }
 
+
+
 void loop() {  
   //处理按钮事件
   button1.tick();
@@ -114,6 +118,11 @@ void loop() {
         }
       } else {
         Serial.println("游戏结束！");
+        if(!game.isLuBuAlive()){
+          musicPlayer.playTrackOnce(24);
+        } else {
+          musicPlayer.playTrackOnce(23);
+        }
         state = MENU;
       }
 

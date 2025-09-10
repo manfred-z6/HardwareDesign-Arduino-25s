@@ -5,5 +5,6 @@
 
 // 使用 extern 关键字声明全局变量，告诉编译器其定义在其他文件中
 extern volatile bool isAnySequenceRunning;
+extern volatile bool flag1, flag2, flag3, flag4;
 
 #endif  //GLOBALVARS_H
