@@ -121,4 +121,7 @@ extern Game game;
 void showGameStatus();
 void music_error();
 
+extern unsigned long lastAudioEndTime;
+extern const unsigned long AUDIO_COOLDOWN;
+
 #endif

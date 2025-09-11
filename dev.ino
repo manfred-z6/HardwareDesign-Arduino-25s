@@ -113,7 +113,7 @@ void loop() {
 
       // 只有在没有序列运行时，才更新NFC状态
       if(!game.isGameOver()) {
-        if (!isAnySequenceRunning && !musicPlayer.isCurrentlyPlaying()) {
+        if (!isAnySequenceRunning && (millis() - lastAudioEndTime >= AUDIO_COOLDOWN)) {
           updatenfc();
         }
       } else {

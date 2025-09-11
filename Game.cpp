@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 unsigned long lastAudioEndTime = 0;
-const unsigned long AUDIO_COOLDOWN = 370; // 冷却时间
+const unsigned long AUDIO_COOLDOWN = 3700; // 冷却时间
 
 // 定义全局游戏对象
 Game game;
@@ -51,7 +51,7 @@ private:
     bool allAttacksReduced;
 
 public:
-    LuBu() : Character("吕布", 40, 10, 6), skillCount(2), 
+    LuBu() : Character("吕布", 36, 10, 6), skillCount(2), 
              nextAttackReduced(false), allAttacksReduced(false) {}
     
     void attack(Character* target) override {
@@ -78,7 +78,7 @@ public:
     
     void heal() override {
         Serial.println("吕布回血，恢复6点生命值！");
-        restoreHp(healAmount);
+        restoreHp(healAmount);  
     }
     
     bool skill1() override {
@@ -303,12 +303,12 @@ void Game::initializeGame() {
     flag3 = 1;
     flag4 = 1;
 
-    isLuBuTurn = true;
+    isLuBuTurn = false;
     gameOver = false;
     
     Serial.println("游戏初始化完成！");
     Serial.println("三英战吕布开始！");
-    Serial.println("--- 吕布的回合 ---");
+    Serial.println("--- 三英的回合 ---");
     musicPlayer.playTrackOnce(25);
 }
 
