@@ -162,16 +162,219 @@ void stopSequence(int sequenceIndex) {
 }
 
 // 具体动作序列
-int action_attack_1() {
+//吕布攻击
+int action_lvbu_attack_front(){}
+//吕布恢复
+int action_lvbu_heal_front(){}
+//吕布技能一
+int action_lvbu_skill1_front(){}
+int action_lvbu_skill1_back(){}
+//吕布技能二
+int action_lvbu_skill2_front(){}
+int action_lvbu_skill2_back(){}
+//吕布阵亡
+int action_lvbu_die_front(){}
+int action_lvbu_die_back(){}
+//关羽攻击
+int action_guanyu_attack_front() {
+  RotationAction actions[3];
+  actions[0] = {0, 1, 40, 800};  
+  actions[1] = {0, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
+  actions[2] = {0, 0, 40, 800}; 
+  return addActionSequence(actions, 3);
+}
+//关羽恢复
+int action_guanyu_heal_front() {
+  RotationAction actions[3];
+  actions[0] = {0, 1, 10, 1200};  
+  actions[1] = {0, 0, 0, 400};
+  actions[2] = {0, 0, 10, 1200}; 
+  return addActionSequence(actions, 3);
+}
+//关羽技能一
+int action_guanyu_skill1_front(){
+  RotationAction actions[7];
+  actions[0] = {0, 0, 20, 400};  
+  actions[1] = {0, 0, 0, 100};
+  actions[2] = {0, 1, 20, 400};
+  actions[3] = {0, 1, 0, 200};
+  actions[4] = {0, 1, 25, 1100};
+  actions[5] = {0, 0, 0, 200};
+  actions[6] = {0, 0, 25, 1100};
+  return addActionSequence(actions, 7);
+}
+int action_guanyu_skill1_back(){
+  RotationAction actions[5];
+  actions[0] = {1, 0, 0, 100};
+  actions[1] = {1, 0, 30, 700};
+  actions[2] = {1, 1, 0, 650};
+  actions[3] = {1, 1, 50, 1000};
+  actions[4] = {1, 1, 0, 900};
+  return addActionSequence(actions, 5);
+}
+//关羽技能二
+int action_guanyu_skill2_front(){
+  RotationAction actions[4];
+  actions[0] = {0, 1, 10, 1100};  
+  actions[1] = {0, 1, 0, 600};
+  actions[2] = {0, 1, 20, 400};
+  actions[3] = {0, 0, 40, 750}; 
+  return addActionSequence(actions, 4);
+}
+int action_guanyu_skill2_back(){
+  RotationAction actions[3];
+  actions[0] = {1, 1, 0, 1700};  
+  actions[1] = {1, 1, 20, 400};
+  actions[2] = {1, 1, 0, 350}; 
+  return addActionSequence(actions, 3);
+}
+//关羽阵亡
+int action_guanyu_die_front(){
+  RotationAction actions[3];
+  actions[0] = {0, 1, 20, 1550};
+  actions[1] = {0, 1, 0, 4500};  
+  actions[2] = {0, 0, 20, 1730}; 
+  return addActionSequence(actions, 3);
+}
+int action_guanyu_die_back(){
   RotationAction actions[2];
-  actions[0] = {0, 1, 40, 400};  // 舵机0逆时针
-  actions[1] = {0, 0, 50, 500}; // 舵机0顺时针
+  actions[0] = {1, 1, 90, 4000};  
+  actions[1] = {1, 1, 0, 4000}; 
   return addActionSequence(actions, 2);
 }
-
-int action_back_lb() {
+//关羽复活
+int action_guanyu_revive_back(){}
+//刘备攻击
+int action_liubei_attack_front(){
+  RotationAction actions[3];
+  actions[0] = {2, 1, 40, 800};  
+  actions[1] = {2, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
+  actions[2] = {2, 0, 40, 800}; 
+  return addActionSequence(actions, 3);
+}
+//刘备治疗
+int action_liubei_heal_front(){
+  RotationAction actions[3];
+  actions[0] = {2, 1, 10, 1200};  
+  actions[1] = {2, 0, 0, 400};
+  actions[2] = {2, 0, 10, 1200}; 
+  return addActionSequence(actions, 3);
+}
+//刘备技能一
+int action_liubei_skill1_front(){
+  RotationAction actions[3];
+  actions[0] = {2, 1, 40, 600};  
+  actions[1] = {2, 0, 0, 4000};
+  actions[2] = {2, 0, 40, 600}; 
+  return addActionSequence(actions, 3);
+}
+int action_liubei_skill1_back(){
+  RotationAction actions[8];
+  actions[0] = {3, 0, 0, 600};
+  actions[1] = {3, 0, 30, 500};
+  actions[2] = {3, 1, 30, 500};
+  actions[3] = {3, 0, 30, 500};
+  actions[4] = {3, 1, 30, 500};
+  actions[5] = {3, 0, 30, 500};
+  actions[6] = {3, 1, 30, 500};
+  actions[7] = {3, 1, 0, 600};
+  return addActionSequence(actions, 9);
+}
+//刘备技能二
+int action_liubei_skill2_front(){
+  RotationAction actions[3];
+  actions[0] = {2, 1, 40, 1000};  
+  actions[1] = {2, 0, 0, 2500};
+  actions[2] = {2, 0, 40, 1050}; 
+  return addActionSequence(actions, 3);
+}
+int action_liubei_skill2_back(){
+  RotationAction actions[4];
+  actions[0] = {3, 0, 0, 1000};
+  actions[1] = {3, 0, 45,1000};
+  actions[2] = {3, 1, 45,1000};
+  actions[3] = {3, 1, 0, 1000};
+  return addActionSequence(actions, 4);
+}
+//刘备阵亡
+int action_liubei_die_front(){
+  RotationAction actions[3];
+  actions[0] = {2, 1, 20, 1550};
+  actions[1] = {2, 1, 0, 4500};  
+  actions[2] = {2, 0, 20, 1550}; 
+  return addActionSequence(actions, 3);
+}
+int action_liubei_die_back(){
   RotationAction actions[2];
-  actions[0] = {1, 0, 50, 500};  // 舵机1顺时针
-  actions[1] = {1, 1, 75, 1000}; // 舵机1逆时针
+  actions[0] = {3, 1, 90, 4000};  
+  actions[1] = {3, 1, 0, 4000}; 
+  return addActionSequence(actions, 2);
+}
+//刘备归位
+int action_liubei_revive_back(){
+}
+//张飞攻击
+int action_zhangfei_attack_front(){
+  RotationAction actions[3];
+  actions[0] = {4, 1, 40, 900};  
+  actions[1] = {4, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
+  actions[2] = {4, 0, 40, 840}; 
+  return addActionSequence(actions, 3);
+}
+//张飞恢复
+int action_zhangfei_heal_front(){
+  RotationAction actions[3];
+  actions[0] = {4, 1, 10, 1200};  
+  actions[1] = {4, 0, 0, 400};
+  actions[2] = {4, 0, 10, 1000}; 
+  return addActionSequence(actions, 3);
+}
+//张飞技能一
+int action_zhangfei_skill1_front(){
+   RotationAction actions[3];
+  actions[0] = {4, 1, 40, 1030};  
+  actions[1] = {4, 0, 0, 3000};
+  actions[2] = {4, 0, 40, 950}; 
+  return addActionSequence(actions, 3);
+}
+int action_zhangfei_skill1_back(){
+  RotationAction actions[3];
+  actions[0] = {5, 0, 0, 1050};
+  actions[1] = {5, 0,50, 2500};
+  actions[2] = {5, 0,0, 2000};
+  return addActionSequence(actions, 3);
+}
+//张飞技能二
+int action_zhangfei_skill2_front(){
+  RotationAction actions[3];
+  actions[0] = {4, 1, 40, 1100};  
+  actions[1] = {4, 0, 0, 4500};
+  actions[2] = {4, 0, 40, 1000}; 
+  return addActionSequence(actions, 3);
+}
+int action_zhangfei_skill2_back(){
+  RotationAction actions[8];
+  actions[0] = {5, 0, 0, 1200};
+  actions[1] = {5, 0, 30, 500};
+  actions[2] = {5, 1, 0, 500};
+  actions[3] = {5, 0, 30, 500};
+  actions[4] = {5, 1, 0, 1000};
+  actions[5] = {5, 1, 30, 1000};
+  actions[6] = {5, 0, 60, 500};
+  actions[7] = {5, 1, 0, 1000};
+  return addActionSequence(actions, 8);
+}
+//张飞阵亡
+int action_zhangfei_die_front(){
+  RotationAction actions[3];
+  actions[0] = {4, 1, 30, 1550};
+  actions[1] = {4, 1, 0, 4500};  
+  actions[2] = {4, 0, 30, 1300}; 
+  return addActionSequence(actions, 3);
+}
+int action_zhangfei_die_back(){
+  RotationAction actions[2];
+  actions[0] = {5, 1, 90, 4000};  
+  actions[1] = {5, 1, 0, 4000}; 
   return addActionSequence(actions, 2);
 }

@@ -9,10 +9,11 @@
 #include "Game.h"
 #include "GlobalVars.h"
 #include "Music.h"
+#include "Music_background.h"
 
 // 音乐播放器全局变量
 #define MUSIC_SERIAL Serial1    //使用Mega的Serial1硬件串口
-
+#define MUSIC_SERIAL2 Serial2   //使用Mega的Serial2硬件串口
 // 创建硬件对象
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
@@ -67,7 +68,6 @@ void setup() {
   
   // 初始化NFC模块
   NFC_Init(); // 使用Nfc.cpp中定义的初始化函数
-  Serial.println("System Initialization Complete.");
 
   // 初始化音乐播放器
   MUSIC_SERIAL.begin(9600);
@@ -76,6 +76,16 @@ void setup() {
   } else {
     Serial.println(F("音乐播放器初始化成功"));
   }
+
+  // 初始化音乐播放器2
+  MUSIC_SERIAL2.begin(9600);
+  if (!musicPlayer2.begin(MUSIC_SERIAL2)) {
+    Serial.println(F("音乐播放器2初始化失败，系统继续运行但无音频功能"));
+  } else {
+    Serial.println(F("音乐播放器2初始化成功"));
+  }
+
+  Serial.println("System Initialization Complete.");
 }
 
 
@@ -93,6 +103,10 @@ void loop() {
   switch(state){
     case MENU:{
       menu_main();
+      // 更新所有滑块序列状态
+      updateSliderSequences();
+      // 更新所有动作序列状态
+      updateSequences();
       break;
     }
     case GAME:{
@@ -118,6 +132,7 @@ void loop() {
         }
       } else {
         Serial.println("游戏结束！");
+        musicPlayer2.stop();
         if(!game.isLuBuAlive()){
           musicPlayer.playTrackOnce(24);
         } else {
@@ -201,14 +216,14 @@ void menu_plot(){
 // 按钮回调函数
 void onClick1() {
   Serial.println("Button1 clicked");
-  startSequence(action_attack_1());
-}
+  musicPlayer.playTrackOnce(1);
+  }
 void onLongPress1() {
   Serial.println("Button1 long-pressed");
   switch(state){
     case MENU: {
       state = PLOT;
-      Serial.println("已进入剧情模式");
+      Serial.println("已进入剧情模式");  
       break;
     }
     default: break;
@@ -217,7 +232,7 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println("Button2 clicked");
-  startSequence(action_back_lb());
+  musicPlayer2.playTrackOnce(1);
 }
 void onLongPress2() {
   Serial.println("Button2 long-pressed");
@@ -233,6 +248,7 @@ void onLongPress2() {
     case GAME: {
       state = MENU;
       Serial.println("已返回菜单");
+      musicPlayer2.stop();
       break;
     }
     default: break;

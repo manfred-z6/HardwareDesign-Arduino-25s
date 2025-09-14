@@ -1,10 +1,10 @@
-#ifndef __MUSIC_H
-#define __MUSIC_H
+#ifndef __MUSIC_BACKGROUND_H
+#define __MUSIC_BACKGROUND_H
 
 #include <Arduino.h>
 #include <DFRobotDFPlayerMini.h>
 
-class MusicPlayer {
+class MusicPlayer2 {
 private:
   DFRobotDFPlayerMini myDFPlayer;
   uint8_t busyPin;
@@ -12,11 +12,11 @@ private:
   unsigned long lastDebounceTime;
   const unsigned long debounceDelay = 50;
   uint16_t currentLoopTrack = 0;
-
-public:
-  MusicPlayer(uint8_t busyPin = 2);
   
-  bool begin(HardwareSerial& serial = Serial1);
+public:
+  MusicPlayer2(uint8_t busyPin = 3);
+  
+  bool begin(HardwareSerial& serial = Serial2);
   bool checkPlayingStatus();
   void playTrackOnce(uint16_t trackNumber);
   void playTrackLoop(uint16_t trackNumber);
@@ -25,6 +25,6 @@ public:
   bool isCurrentlyPlaying() const { return isPlaying; }
 };
 
-extern MusicPlayer musicPlayer;
+extern MusicPlayer2 musicPlayer2;
 
-#endif  //MUSIC_H
+#endif  //MUSIC_GROUND_H

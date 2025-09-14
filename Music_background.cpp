@@ -1,32 +1,32 @@
-#include "Music.h"
+#include "Music_background.h"
 #include <DFRobotDFPlayerMini.h>
 
-MusicPlayer musicPlayer(2); // 默认使用引脚2作为BUSY引脚
+MusicPlayer2 musicPlayer2(3); // 默认使用引脚3作为BUSY引脚
 
-MusicPlayer::MusicPlayer(uint8_t busyPin) 
-  : busyPin(busyPin), isPlaying(false), lastDebounceTime(0), currentLoopTrack(0) {
+MusicPlayer2::MusicPlayer2(uint8_t busyPin) 
+  : busyPin(busyPin), isPlaying(false), lastDebounceTime(0),  currentLoopTrack(0) {
 }
 
-bool MusicPlayer::begin(HardwareSerial& serial) {
+bool MusicPlayer2::begin(HardwareSerial& serial) {
   pinMode(busyPin, INPUT_PULLUP);
   
-  Serial.println(F("初始化DFPlayer Mini..."));
+  Serial.println(F("初始化DFPlayer Mini 2..."));
   
   if (!myDFPlayer.begin(serial)) {
-    Serial.println(F("无法初始化DFPlayer Mini:"));
+    Serial.println(F("无法初始化DFPlayer Mini 2:"));
     Serial.println(F("1. 请检查电源和接线!"));
     Serial.println(F("2. 请确认SD卡已插入!"));
     return false;
   }
   
-  Serial.println(F("DFPlayer Mini 就绪!"));
+  Serial.println(F("DFPlayer Mini 2 就绪!"));
   myDFPlayer.volume(20);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
   
   return true;
 }
 
-bool MusicPlayer::checkPlayingStatus() {
+bool MusicPlayer2::checkPlayingStatus() {
   int reading = digitalRead(busyPin);
   
   if (reading != isPlaying) {
@@ -45,13 +45,13 @@ bool MusicPlayer::checkPlayingStatus() {
   return isPlaying;
 }
 
-void MusicPlayer::playTrackOnce(uint16_t trackNumber) {
+void MusicPlayer2::playTrackOnce(uint16_t trackNumber) {
   Serial.print(F("播放曲目: "));
   Serial.println(trackNumber);
   myDFPlayer.play(trackNumber);
 }
 
-void MusicPlayer::playTrackLoop(uint16_t trackNumber) {
+void MusicPlayer2::playTrackLoop(uint16_t trackNumber) {
   Serial.print(F("Loop track: "));
   Serial.println(trackNumber);
   currentLoopTrack = trackNumber; // 设置要循环的曲目
@@ -60,11 +60,12 @@ void MusicPlayer::playTrackLoop(uint16_t trackNumber) {
 }
 
 
-void MusicPlayer::setVolume(uint8_t volume) {
+
+void MusicPlayer2::setVolume(uint8_t volume) {
   myDFPlayer.volume(constrain(volume, 0, 30));
 }
 
-void MusicPlayer::stop() {
+void MusicPlayer2::stop() {
   Serial.println(F("Stop playback."));
   myDFPlayer.stop();
   isPlaying = false;
