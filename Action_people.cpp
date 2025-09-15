@@ -66,9 +66,9 @@ void executeAction(int sequenceIndex) {
  
   // 检查舵机通道是否被占用
   if (servoChannelOccupied[action.servoChannel]) {
-    Serial.print("Servo channel ");
+    Serial.print(F("Servo channel "));
     Serial.print(action.servoChannel);
-    Serial.println(" is busy, waiting...");
+    Serial.println(F(" is busy, waiting..."));
     return;
   }
   
@@ -86,14 +86,14 @@ void executeAction(int sequenceIndex) {
   pwm.setPWM(action.servoChannel, 0, getPulseWidth(pulseWidth));
   seq->startTime = millis();
   
-  Serial.print("Executing action on servo ");
+  Serial.print(F("Executing action on servo "));
   Serial.println(action.servoChannel);
 }
 
 // 添加一个动作序列并返回其索引
 int addActionSequence(RotationAction actions[], int count) {
   if (count > MAX_ACTION_SINGLESEQ) {
-    Serial.println("Too many actions for one sequence!");
+    Serial.println(F("Too many actions for one sequence!"));
     return -1;
   }
 
@@ -105,7 +105,7 @@ int addActionSequence(RotationAction actions[], int count) {
     }
   }
   if (freeSlotIndex == -1) {
-    Serial.println("Cannot add more sequences - maximum reached!");
+    Serial.println(F("Cannot add more sequences - maximum reached!"));
     return -1;
   }
 
@@ -124,13 +124,13 @@ int addActionSequence(RotationAction actions[], int count) {
 // 开始执行指定序列
 void startSequence(int sequenceIndex) {
   if (sequenceIndex < 0 || sequenceIndex >= MAX_CONCURRENT_SEQUENCES) {
-    Serial.println("Invalid sequence index!");
+    Serial.println(F("Invalid sequence index!"));
     return;
   }
   
   ActionSequenceState* seq = &activeSequences[sequenceIndex];
   if (seq->actionCount == 0) {
-    Serial.println("No actions to execute in this sequence");
+    Serial.println(F("No actions to execute in this sequence"));
     return;
   }
   
@@ -156,9 +156,9 @@ void stopSequence(int sequenceIndex) {
   seq->currentActionIndex = -1;
   seq->isActive = false;
   
-  Serial.print("Sequence ");
+  Serial.print(F("Sequence "));
   Serial.print(sequenceIndex);
-  Serial.println(" stopped");
+  Serial.println(F(" stopped"));
 }
 
 // 具体动作序列

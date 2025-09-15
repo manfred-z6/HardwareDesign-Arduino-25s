@@ -42,14 +42,14 @@ void NFC_Init() {
   nfc.begin();
   uint32_t versiondata = nfc.getFirmwareVersion();
   if (!versiondata) {
-    Serial.println("Didn't find PN53x board. Please check your wiring.");
+    Serial.println(F("Didn't find PN53x board. Please check your wiring."));
     while (1);
   }
   nfc.SAMConfig();
-  Serial.println("NFC Initialized. Waiting for cards...");
-  Serial.print("Registered ");
+  Serial.println(F("NFC Initialized. Waiting for cards..."));
+  Serial.print(F("Registered "));
   Serial.print(uidFunctionCount);
-  Serial.println(" UID-function mappings.");
+  Serial.println(F(" UID-function mappings."));
 }
 
 // 非阻塞更新NFC状态
@@ -71,7 +71,7 @@ void updatenfc() {
         stateEntryTime = currentMillis;
         cardProcessed = false;
         
-        Serial.print("Card detected. UID: ");
+        Serial.print(F("Card detected. UID: "));
         for (uint8_t i = 0; i < uidLength; i++) {
           Serial.print(" 0x"); Serial.print(uid[i], HEX);
         }
@@ -95,7 +95,7 @@ void updatenfc() {
         for (int i = 0; i < uidFunctionCount; i++) {
           if (currentUidLength == uidFunctionMap[i].uidLength && 
               compareUid(currentUid, (uint8_t*)uidFunctionMap[i].uid, currentUidLength)) {
-            Serial.print("Executing function for UID: ");
+            Serial.print(F("Executing function for UID: "));
             for (uint8_t j = 0; j < currentUidLength; j++) {
               Serial.print(" 0x"); Serial.print(currentUid[j], HEX);
             }
@@ -108,7 +108,7 @@ void updatenfc() {
         }
         
         if (!uidRecognized) {
-          Serial.println("Unknown UID detected.");
+          Serial.println(F("Unknown UID detected."));
           onUnknownUidDetected(); // 执行未知UID处理函数
         }
         
@@ -127,7 +127,7 @@ void updatenfc() {
         memset(currentUid, 0, sizeof(currentUid));
         currentUidLength = 0;
         cardProcessed = false;
-        Serial.println("Card removed. Ready for next card.");
+        Serial.println(F("Card removed. Ready for next card."));
       }
       break;
   }
@@ -146,134 +146,134 @@ bool compareUid(uint8_t* uid1, uint8_t* uid2, uint8_t length) {
 // UID对应的函数实现（空函数，你可以后续修改）
 void onUid1Detected() {
   // 第一张卡的函数 - 后续可以修改为具体实现
-  Serial.println("Function for UID 1 executed");
+  Serial.println(F("Function for UID 1 executed"));
   game.lubuSkill1();
   showGameStatus(); 
 }
 
 void onUid2Detected() {
   // 第二张卡的函数 - 后续可以修改为具体实现
-  Serial.println("Function for UID 2 executed");
+  Serial.println(F("Function for UID 2 executed"));
   game.liuBeiSkill2(1);
   showGameStatus();
 }
 
 void onUid3Detected() {
   // 第三张卡的函数 - 后续可以修改为具体实现
-  Serial.println("Function for UID 3 executed");
+  Serial.println(F("Function for UID 3 executed"));
   game.liuBeiSkill2(2);
   showGameStatus();
 }
 
 void onUid4Detected() {
-  Serial.println("Function for UID 4 executed");
+  Serial.println(F("Function for UID 4 executed"));
   game.liuBeiAttack();
   showGameStatus();
 }
 
 void onUid5Detected() {
-  Serial.println("Function for UID 5 executed");
+  Serial.println(F("Function for UID 5 executed"));
   game.liuBeiSkill1();
   showGameStatus();
 }
 
 void onUid6Detected() {
-  Serial.println("Function for UID 6 executed");
+  Serial.println(F("Function for UID 6 executed"));
   game.liuBeiHeal();
   showGameStatus();
 }
 
 void onUid7Detected() {
-  Serial.println("Function for UID 7 executed");
+  Serial.println(F("Function for UID 7 executed"));
   game.guanYuAttack();
   showGameStatus();
 }
 
 void onUid8Detected() {
-  Serial.println("Function for UID 8 executed");
+  Serial.println(F("Function for UID 8 executed"));
   game.guanYuHeal();
   showGameStatus();
 }
 
 void onUid9Detected() {
-  Serial.println("Function for UID 9 executed");
+  Serial.println(F("Function for UID 9 executed"));
   game.guanYuSkill1();
   showGameStatus();
 }
 
 void onUid10Detected() {
-  Serial.println("Function for UID 10 executed");
+  Serial.println(F("Function for UID 10 executed"));
   game.guanYuSkill2();
   showGameStatus();
 }
 
 void onUid11Detected() {
-  Serial.println("Function for UID 11 executed");
+  Serial.println(F("Function for UID 11 executed"));
   game.zhangFeiAttack();
   showGameStatus();
 }
 
 void onUid12Detected() {
-  Serial.println("Function for UID 12 executed");
+  Serial.println(F("Function for UID 12 executed"));
   game.zhangFeiHeal();
   showGameStatus();
 }
 
 void onUid13Detected() {
-  Serial.println("Function for UID 13 executed");
+  Serial.println(F("Function for UID 13 executed"));
   game.zhangFeiSkill1();
   showGameStatus();
 }
 
 void onUid14Detected() {
-  Serial.println("Function for UID 14 executed");
+  Serial.println(F("Function for UID 14 executed"));
   game.zhangFeiSkill2();
   showGameStatus();
 }
 
 void onUid15Detected() {
-  Serial.println("Function for UID 15 executed");
+  Serial.println(F("Function for UID 15 executed"));
   game.lubuAttack(0);
   showGameStatus();
 }
 
 void onUid16Detected() {
-  Serial.println("Function for UID 16 executed");
+  Serial.println(F("Function for UID 16 executed"));
   game.lubuAttack(1);
   showGameStatus();
 }
 
 void onUid17Detected() {
-  Serial.println("Function for UID 17 executed");
+  Serial.println(F("Function for UID 17 executed"));
   game.lubuAttack(2);
   showGameStatus();
 }
 
 void onUid18Detected() {
-  Serial.println("Function for UID 18 executed");
+  Serial.println(F("Function for UID 18 executed"));
   game.lubuHeal();
   showGameStatus();
 }
 
 void onUid19Detected() {
-  Serial.println("Function for UID 19 executed");
+  Serial.println(F("Function for UID 19 executed"));
   game.lubuSkill2(0);
   showGameStatus();
 }
 
 void onUid20Detected() {
-  Serial.println("Function for UID 20 executed");
+  Serial.println(F("Function for UID 20 executed"));
   game.lubuSkill2(1);
   showGameStatus();
 }
 
 void onUid21Detected() {
-  Serial.println("Function for UID 21 executed");
+  Serial.println(F("Function for UID 21 executed"));
   game.lubuSkill2(2);
   showGameStatus();
 }
 
 void onUnknownUidDetected() {
   // 未知UID的处理函数 - 后续可以修改为具体实现
-  Serial.println("Unknown UID function executed");
+  Serial.println(F("Unknown UID function executed"));
 }

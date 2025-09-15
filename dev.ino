@@ -28,6 +28,7 @@ OneButton button2(BUTTON_2, true, true);
 
 //定义全局变量
 volatile bool isAnySequenceRunning = false; //判断是否有动作序列在执行
+volatile bool isSliderMoving = false;   //判断是否有滑台在移动
 volatile bool flag1, flag2, flag3, flag4;
 
 enum state_mode {
@@ -58,7 +59,7 @@ void setup() {
   
   // 初始化滑块电机
   initSliderMotors();
-  Serial.println("Slider Motors Initialized.");
+  Serial.println(F("Slider Motors Initialized."));
 
   // 初始化按钮
   button1.attachClick(onClick1);
@@ -85,7 +86,7 @@ void setup() {
     Serial.println(F("音乐播放器2初始化成功"));
   }
 
-  Serial.println("System Initialization Complete.");
+  Serial.println(F("System Initialization Complete."));
 }
 
 
@@ -116,9 +117,10 @@ void loop() {
       isAnySequenceRunning = false;
       // 更新所有滑块序列状态
       updateSliderSequences();
-      // 更新所有动作序列状态
-      updateSequences();
-
+      // 在没有滑台移动时更新所有动作序列状态
+      if(!isSliderMoving){
+        updateSequences();
+      }
       // 定期更新OLED显示，避免频繁更新影响NFC读取
       if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL) {
         displayGameStatus();
@@ -131,7 +133,7 @@ void loop() {
           updatenfc();
         }
       } else {
-        Serial.println("游戏结束！");
+        Serial.println(F("游戏结束！"));
         musicPlayer2.stop();
         if(!game.isLuBuAlive()){
           musicPlayer.playTrackOnce(24);
@@ -215,15 +217,15 @@ void menu_plot(){
 
 // 按钮回调函数
 void onClick1() {
-  Serial.println("Button1 clicked");
-  musicPlayer.playTrackOnce(1);
-  }
+  Serial.println(F("Button1 clicked"));
+  startSliderSequence(slide_motor4_out());
+}
 void onLongPress1() {
-  Serial.println("Button1 long-pressed");
+  Serial.println(F("Button1 long-pressed"));
   switch(state){
     case MENU: {
       state = PLOT;
-      Serial.println("已进入剧情模式");  
+      Serial.println(F("已进入剧情模式"));  
       break;
     }
     default: break;
@@ -231,11 +233,10 @@ void onLongPress1() {
 }
 
 void onClick2() {
-  Serial.println("Button2 clicked");
-  musicPlayer2.playTrackOnce(1);
+  Serial.println(F("Button2 clicked"));
 }
 void onLongPress2() {
-  Serial.println("Button2 long-pressed");
+  Serial.println(F("Button2 long-pressed"));
   switch(state){
     case MENU: {
       state = GAME;
@@ -247,7 +248,7 @@ void onLongPress2() {
     }
     case GAME: {
       state = MENU;
-      Serial.println("已返回菜单");
+      Serial.println(F("已返回菜单"));
       musicPlayer2.stop();
       break;
     }

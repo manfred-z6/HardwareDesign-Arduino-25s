@@ -34,7 +34,7 @@ void Character::restoreHp(int amount) {
 void Character::die() {
     isAlive = false;
     Serial.print(name);
-    Serial.println("已战败！");
+    Serial.println(F("已战败！"));
 }
 
 void Character::revive() {
@@ -42,7 +42,7 @@ void Character::revive() {
     hp = maxHp; // 复活后生命值为最大值
     skillUsed = true;
     Serial.print(name);
-    Serial.println("已被复活！");
+    Serial.println(F("已被复活！"));
 }
 
 // 吕布类
@@ -66,42 +66,42 @@ public:
             nextAttackReduced = false;
         }
         
-        Serial.print("吕布发动攻击，对");
+        Serial.print(F("吕布发动攻击，对"));
         Serial.print(target->getName());
-        Serial.print("造成");
+        Serial.print(F("造成"));
         Serial.print(damage);
-        Serial.println("点伤害！");
+        Serial.println(F("点伤害！"));
         
         target->takeDamage(damage);
 
         musicPlayer.playTrackOnce(3);   //攻击音乐
         lastAudioEndTime = millis();
-        startSequence(action_lvbu_attack_front());      //攻击动作
+        //startSequence(action_lvbu_attack_front());      //攻击动作
     }
     
     void heal() override {
-        Serial.println("吕布回血，恢复6点生命值！");
+        Serial.println(F("吕布回血，恢复6点生命值！"));
         restoreHp(healAmount);  
     }
     
     bool skill1() override {
         if (skillCount <= 0) {
-            Serial.println("技能使用次数已达上限！");
+            Serial.println(F("技能使用次数已达上限！"));
             return false;
         }
-        Serial.println("吕布发动技能1：横扫千军，对敌方全体造成8点伤害！");
+        Serial.println(F("吕布发动技能1：横扫千军，对敌方全体造成8点伤害！"));
         skillCount--;
         return true;
     }
     
     bool skill2(Character* target) override {
         if (skillCount <= 0) {
-            Serial.println("技能使用次数已达上限！");
+            Serial.println(F("技能使用次数已达上限！"));
             return false;
         }
-        Serial.print("吕布发动技能2：无双乱舞，对");
+        Serial.print(F("吕布发动技能2：无双乱舞，对"));
         Serial.print(target->getName());
-        Serial.println("造成12点伤害并恢复自身6点生命值！");
+        Serial.println(F("造成12点伤害并恢复自身6点生命值！"));
         skillCount--;
         return true;
     }
@@ -118,9 +118,9 @@ public:
     LiuBei() : Character("刘备", 14, 4, 8) {}
     
     void attack(Character* target) override {
-        Serial.print("刘备发动攻击，对");
+        Serial.print(F("刘备发动攻击，对"));
         Serial.print(target->getName());
-        Serial.println("造成4点伤害！");
+        Serial.println(F("造成4点伤害！"));
         target->takeDamage(attackDamage);
         musicPlayer.playTrackOnce(7);       //攻击音乐
         lastAudioEndTime = millis();
@@ -128,7 +128,7 @@ public:
     }
     
     void heal() override {
-        Serial.println("刘备回血，恢复8点生命值！");
+        Serial.println(F("刘备回血，恢复8点生命值！"));
         restoreHp(healAmount);
         musicPlayer.playTrackOnce(8);       //恢复音乐
         lastAudioEndTime = millis();
@@ -137,21 +137,21 @@ public:
     
     bool skill1() override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
-        Serial.println("刘备发动技能1：仁德之心，为我方全体恢复10点生命值！");
+        Serial.println(F("刘备发动技能1：仁德之心，为我方全体恢复10点生命值！"));
         markSkillUsed();
         return true;
     }
     
     bool skill2(Character* target) override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
         if (!target->alive()) {
-            Serial.print("刘备发动技能2：仁者无敌，复活");
+            Serial.print(F("刘备发动技能2：仁者无敌，复活"));
             Serial.print(target->getName());
             Serial.println("！");
             target->revive();
@@ -163,7 +163,7 @@ public:
                 flag4 = 1;
             }
         } else {
-            Serial.println("目标尚未死亡，无法复活！");
+            Serial.println(F("目标尚未死亡，无法复活！"));
             return false;
         }
     }
@@ -180,31 +180,31 @@ public:
     
     void attack(Character* target) override {
         int damage = drinkStatus ? 13 : 9;
-        Serial.print("关羽发动攻击，对");
+        Serial.print(F("关羽发动攻击，对"));
         Serial.print(target->getName());
-        Serial.print("造成");
+        Serial.print(F("造成"));
         Serial.print(damage);
-        Serial.println("点伤害！");
+        Serial.println(F("点伤害！"));
         
         target->takeDamage(damage);
         
         if (drinkStatus) {
             takeDamage(2);
-            Serial.println("关羽因喝酒状态损失2点生命值！");
+            Serial.println(F("关羽因喝酒状态损失2点生命值！"));
         }
     }
     
     void heal() override {
-        Serial.println("关羽回血，恢复4点生命值！");
+        Serial.println(F("关羽回血，恢复4点生命值！"));
         restoreHp(healAmount);
     }
     
     bool skill1() override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
-        Serial.println("关羽发动技能1：舍身一击，损失10点生命值，对吕布造成24点伤害！");
+        Serial.println(F("关羽发动技能1：舍身一击，损失10点生命值，对吕布造成24点伤害！"));
         takeDamage(10);
         markSkillUsed();
         return true;
@@ -212,10 +212,10 @@ public:
     
     bool skill2(Character* target) override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
-        Serial.println("关羽发动技能2：喝酒，之后攻击伤害增加但每次损失2点生命值！");
+        Serial.println(F("关羽发动技能2：喝酒，之后攻击伤害增加但每次损失2点生命值！"));
         drinkStatus = true;
         markSkillUsed();
         return true;
@@ -228,33 +228,33 @@ public:
     ZhangFei() : Character("张飞", 20, 8, 6) {}
     
     void attack(Character* target) override {
-        Serial.print("张飞发动攻击，对");
+        Serial.print(F("张飞发动攻击，对"));
         Serial.print(target->getName());
-        Serial.println("造成8点伤害！");
+        Serial.println(F("造成8点伤害！"));
         target->takeDamage(attackDamage);
     }
     
     void heal() override {
-        Serial.println("张飞回血，恢复6点生命值！");
+        Serial.println(F("张飞回血，恢复6点生命值！"));
         restoreHp(healAmount);
     }
     
     bool skill1() override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
-        Serial.println("张飞发动技能1：咆哮，强制吕布下次攻击伤害减为4点！");
+        Serial.println(F("张飞发动技能1：咆哮，强制吕布下次攻击伤害减为4点！"));
         markSkillUsed();
         return true;
     }
     
     bool skill2(Character* target) override {
         if (isSkillUsed()) {
-            Serial.println("技能已使用过，无法再次使用！");
+            Serial.println(F("技能已使用过，无法再次使用！"));
             return false;
         }
-        Serial.println("张飞发动技能2：威吓，之后吕布的所有攻击伤害减为8点！");
+        Serial.println(F("张飞发动技能2：威吓，之后吕布的所有攻击伤害减为8点！"));
         markSkillUsed();
         return true;
     }
@@ -285,9 +285,9 @@ void Game::initializeGame() {
     isLuBuTurn = false;
     gameOver = false;
     
-    Serial.println("游戏初始化完成！");
-    Serial.println("三英战吕布开始！");
-    Serial.println("--- 三英的回合 ---");
+    Serial.println(F("游戏初始化完成！"));
+    Serial.println(F("三英战吕布开始！"));
+    Serial.println(F("--- 三英的回合 ---"));
     musicPlayer2.playTrackLoop(1);
     musicPlayer.playTrackOnce(25);
 }
@@ -331,13 +331,13 @@ void Game::checkGameState() {
     }
 
     if (!lubu->alive() && !musicPlayer.isCurrentlyPlaying() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN) {
-        Serial.println("吕布已败，三英胜利！");
+        Serial.println(F("吕布已败，三英胜利！"));
         gameOver = true;
         return;
     }
     
     if (!liuBei->alive() && !guanYu->alive() && !zhangFei->alive() && !musicPlayer.isCurrentlyPlaying() && (millis() - lastAudioEndTime) > AUDIO_COOLDOWN) {
-        Serial.println("三英已全部战败，吕布胜利！");
+        Serial.println(F("三英已全部战败，吕布胜利！"));
         gameOver = true;
         return;
     }
@@ -346,9 +346,9 @@ void Game::checkGameState() {
 void Game::nextTurn() {
     isLuBuTurn = !isLuBuTurn;
     if (isLuBuTurn) {
-        Serial.println("--- 吕布的回合 ---");
+        Serial.println(F("--- 吕布的回合 ---"));
     } else {
-        Serial.println("--- 三英的回合 ---");
+        Serial.println(F("--- 三英的回合 ---"));
     }
 }
 
@@ -396,8 +396,8 @@ void Game::lubuSkill1() {
     if (static_cast<LuBu*>(lubu)->skill1()) {
         musicPlayer.playTrackOnce(5);
         lastAudioEndTime = millis();
-        startSequence(action_lvbu_skill1_front());
-        startSequence(action_lvbu_skill1_back());
+        //startSequence(action_lvbu_skill1_front());
+        //startSequence(action_lvbu_skill1_back());
         // 对全体英雄造成伤害
         if (liuBei->alive()) liuBei->takeDamage(8);
         if (guanYu->alive()) guanYu->takeDamage(8);
@@ -426,8 +426,8 @@ void Game::lubuSkill2(int targetIndex) {
     if (target && target->alive() && static_cast<LuBu*>(lubu)->skill2(target)) {
         musicPlayer.playTrackOnce(6);
         lastAudioEndTime = millis();
-        startSequence(action_lvbu_skill2_front());
-        startSequence(action_lvbu_skill2_back());
+        //startSequence(action_lvbu_skill2_front());
+        //startSequence(action_lvbu_skill2_back());
         target->takeDamage(12);
         lubu->restoreHp(6);
         nextTurn();

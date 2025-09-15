@@ -23,6 +23,7 @@ void initSliderMotors() {
   }
 }
 
+
 // 更新所有滑块序列状态，需在loop中定期调用
 void updateSliderSequences() {
   bool foundRunning = false; // 局部变量
@@ -49,9 +50,9 @@ void updateSliderSequences() {
           seq->isRunning = false;
           seq->currentActionIndex = -1;
           seq->isActive = false;
-          Serial.print("Slider Sequence ");
+          Serial.print(F("Slider Sequence "));
           Serial.print(i);
-          Serial.println(" completed");
+          Serial.println(F(" completed"));
         }
       } else {
         // 执行步进操作
@@ -62,7 +63,11 @@ void updateSliderSequences() {
   }
   if (foundRunning) {
     isAnySequenceRunning = true;
+    isSliderMoving = true;
+  } else {
+    isSliderMoving = false;
   }
+
 }
 
 // 执行指定序列的当前动作
@@ -77,9 +82,9 @@ void sliderExecuteAction(int sequenceIndex) {
  
   // 检查电机通道是否被占用
   if (motorChannelOccupied[motorID]) {
-    Serial.print("Motor ");
+    Serial.print(F("Motor "));
     Serial.print(motorID);
-    Serial.println(" is busy, waiting...");
+    Serial.println(F(" is busy, waiting..."));
     return;
   }
   
@@ -89,8 +94,12 @@ void sliderExecuteAction(int sequenceIndex) {
   digitalWrite(motorPins[motorID].dirPin, action.direction ? HIGH : LOW);
   
   // 计算步进延迟（转速转/秒 -> 微秒延迟）
-  // 假设200步/转 (TB6600常见设置)
-  seq->motorState.stepDelay = 500000 / (action.speed * 200);
+  // 转速 (转/秒) -> 脉冲频率 (Hz) = 脉冲数/转 * 转/秒
+  if (action.speed > 0) {
+    seq->motorState.stepDelay = 500000 / (action.speed * 200); // 计算每个脉冲的间隔时间（微秒）
+  } else {
+    seq->motorState.stepDelay = 0; // 速度为0则不移动
+  }
   
   // 记录开始时间
   seq->motorState.startTime = millis();
@@ -99,7 +108,7 @@ void sliderExecuteAction(int sequenceIndex) {
   // 使能电机
   digitalWrite(motorPins[motorID].enaPin, LOW);
   
-  Serial.print("Executing action on motor ");
+  Serial.print(F("Executing action on motor "));
   Serial.println(motorID);
 }
 
@@ -131,7 +140,7 @@ void stepMotor(int sequenceIndex) {
 int addSliderSequence(SliderAction actions[], int count) {
   const int MAX_ACTIONS_PER_SEQUENCE = 10;
   if (count > MAX_ACTIONS_PER_SEQUENCE) {
-    Serial.println("Too many actions for one sequence!");
+    //Serial.println("Too many actions for one sequence!");
     return -1;
   }
 
@@ -143,7 +152,7 @@ int addSliderSequence(SliderAction actions[], int count) {
     }
   }
   if (freeSlotIndex == -1) {
-    Serial.println("Cannot add more sequences - maximum reached!");
+    //Serial.println("Cannot add more sequences - maximum reached!");
     return -1;
   }
 
@@ -165,13 +174,13 @@ int addSliderSequence(SliderAction actions[], int count) {
 // 开始执行指定序列
 void startSliderSequence(int sequenceIndex) {
   if (sequenceIndex < 0 || sequenceIndex >= MAX_SLIDER_SEQUENCES) {
-    Serial.println("Invalid sequence index!");
+    //Serial.println("Invalid sequence index!");
     return;
   }
   
   SliderSequenceState* seq = &sliderSequences[sequenceIndex];
   if (seq->actionCount == 0) {
-    Serial.println("No actions to execute in this sequence");
+    //Serial.println("No actions to execute in this sequence");
     return;
   }
   
@@ -197,9 +206,9 @@ void stopSliderSequence(int sequenceIndex) {
   seq->currentActionIndex = -1;
   seq->isActive = false;
   
-  Serial.print("Slider Sequence ");
+  Serial.print(F("Slider Sequence "));
   Serial.print(sequenceIndex);
-  Serial.println(" stopped");
+  Serial.println(F(" stopped"));
 }
 
 // 预定义动作序列函数（每个序列只控制一个电机）
@@ -222,17 +231,16 @@ int slide_motor2_sequence() {
 
 int slide_motor3_sequence() {
   SliderAction actions[5];
-  actions[0] = {2, 1, 1.8, 2000, 400};    // 电机2顺时针，0.8转/秒，持续2秒，等待0.4秒
-  actions[1] = {2, 0, 2, 1800, 600};    // 电机2逆时针，1.2转/秒，持续1.8秒，等待0.6秒
-  actions[2] = {2, 1, 2.0, 1500, 300};    // 电机2顺时针，2转/秒，持续1.5秒，等待0.3秒
-  actions[3] = {2, 0, 3.0, 2500, 500};    // 电机2逆时针，1转/秒，持续2.5秒，等待0.5秒
-  actions[4] = {2, 1, 2.5, 1200, 0};      // 电机2顺时针，1.5转/秒，持续1.2秒
+  actions[0] = {3, 1, 1.8, 2000, 400};    // 电机2顺时针，0.8转/秒，持续2秒，等待0.4秒
+  actions[1] = {3, 0, 2, 1800, 600};    // 电机2逆时针，1.2转/秒，持续1.8秒，等待0.6秒
+  actions[2] = {3, 1, 2.0, 1500, 300};    // 电机2顺时针，2转/秒，持续1.5秒，等待0.3秒
+  actions[3] = {3, 0, 3.0, 2500, 500};    // 电机2逆时针，1转/秒，持续2.5秒，等待0.5秒
+  actions[4] = {3, 1, 2.5, 1200, 0};      // 电机2顺时针，1.5转/秒，持续1.2秒
   return addSliderSequence(actions, 5);
 }
 
-int slide_motor4_sequence() {
-  SliderAction actions[2];
-  actions[0] = {3, 1, 1.5, 1200, 800};    // 电机3顺时针，1.5转/秒，持续1.2秒，等待0.8秒
-  actions[1] = {3, 0, 0.5, 3000, 0};      // 电机3逆时针，0.5转/秒，持续3秒
-  return addSliderSequence(actions, 2);
+int slide_motor4_out() {
+  SliderAction actions[1];
+  actions[0] = {3, 1, 4.0, 2000, 0};    
+  return addSliderSequence(actions, 1);
 }

@@ -65,6 +65,6 @@ void stepMotor(int sequenceIndex);
 int slide_motor1_sequence();
 int slide_motor2_sequence();
 int slide_motor3_sequence();
-int slide_motor4_sequence();
+int slide_motor4_out();
 
 #endif
