@@ -212,7 +212,8 @@ void menu_plot(){
 // 按钮回调函数
 void onClick1() {
   Serial.println(F("Button1 clicked"));
-  startSliderSequence(slide_motor4_out());
+ startSequence(action_lvbu_die_front());
+ startSequence(action_lvbu_die_back());
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));

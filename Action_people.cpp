@@ -1,7 +1,7 @@
 #include "Action_people.h"
 #include "GlobalVars.h"
 // 定义全局变量
-const int MAX_CONCURRENT_SEQUENCES = 10;
+const int MAX_CONCURRENT_SEQUENCES = 20;
 const int MAX_ACTION_SINGLESEQ = 20;
 ActionSequenceState activeSequences[MAX_CONCURRENT_SEQUENCES] = {};
 int activeSequenceCount = 0;
@@ -163,18 +163,79 @@ void stopSequence(int sequenceIndex) {
 
 // 具体动作序列
 //吕布攻击
-int action_lvbu_attack_front(){}
+int action_lvbu_attack_front(){
+  RotationAction actions[3];
+  actions[0] = {6, 0, 40, 800};  
+  actions[1] = {6, 1, 0, 200};  //舵机序号，方向，转动速度，转动时间
+  actions[2] = {6, 1, 40, 850}; 
+  return addActionSequence(actions, 3);
+}
 //吕布恢复
-int action_lvbu_heal_front(){}
+int action_lvbu_heal_front(){
+  RotationAction actions[3];
+  actions[0] = {6, 0, 10, 1200};  
+  actions[1] = {6, 1, 0, 400};
+  actions[2] = {6, 1, 10, 1350}; 
+  return addActionSequence(actions, 3);
+}
 //吕布技能一
-int action_lvbu_skill1_front(){}
-int action_lvbu_skill1_back(){}
+int action_lvbu_skill1_front(){
+  RotationAction actions[12];
+  actions[0] = {6, 0, 60, 900};  
+  actions[1] = {6, 1, 0, 600};
+  actions[2] = {6, 1, 60, 920}; 
+  actions[3] = {6, 1, 0, 600};
+  actions[4] = {6, 0, 70, 900};  
+  actions[5] = {6, 1, 0, 600};
+  actions[6] = {6, 1, 70, 920}; 
+  actions[7] = {6, 1, 0, 600};
+  actions[8] = {6, 0, 80, 900};  
+  actions[9] = {6, 1, 0,600};
+  actions[10] = {6, 1, 80, 900}; 
+  actions[11] = {6, 1, 0, 600};
+  return addActionSequence(actions, 12);
+}
+int action_lvbu_skill1_back(){
+  RotationAction actions[4];
+  actions[0] = {7, 0, 0, 3000};  
+  actions[1] = {7, 1, 0, 3000};  
+  actions[2] = {7, 0, 40, 1600};  
+  actions[3] = {7, 1, 40, 1600};  
+  return addActionSequence(actions, 4);
+}
 //吕布技能二
-int action_lvbu_skill2_front(){}
-int action_lvbu_skill2_back(){}
+int action_lvbu_skill2_front(){
+  RotationAction actions[7];
+  actions[0] = {6, 0, 40, 600};  
+  actions[1] = {6, 1, 0, 1000};
+  actions[2] = {6, 1, 40, 600}; 
+  actions[3] = {6, 0, 0, 500};
+  actions[4] = {6, 0, 20, 2500}; 
+  actions[5] = {6, 0, 0, 1000};
+  actions[6] = {6, 1, 80, 1200};
+  return addActionSequence(actions, 7);
+}
+int action_lvbu_skill2_back(){
+  RotationAction actions[3];
+  actions[0] = {7, 0, 0,5000};  
+  actions[1] = {7, 0, 40,1200};
+  actions[2] = {7, 1, 40, 1200};  
+   return addActionSequence(actions, 3);
+}
 //吕布阵亡
-int action_lvbu_die_front(){}
-int action_lvbu_die_back(){}
+int action_lvbu_die_front(){
+   RotationAction actions[3];
+  actions[0] = {6, 0, 20, 1550};
+  actions[1] = {6, 0, 0, 4500};  
+  actions[2] = {6, 1, 20, 1600}; 
+  return addActionSequence(actions, 3);
+}
+int action_lvbu_die_back(){
+  RotationAction actions[2];
+  actions[0] = {7, 0, 90, 4000};  
+  actions[1] = {7, 0, 0, 4000}; 
+  return addActionSequence(actions, 2);
+}
 //关羽攻击
 int action_guanyu_attack_front() {
   RotationAction actions[3];
