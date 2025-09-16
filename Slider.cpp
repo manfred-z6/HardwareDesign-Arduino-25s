@@ -9,7 +9,7 @@ bool motorChannelOccupied[MOTOR_COUNT] = {false};
 MotorPins motorPins[MOTOR_COUNT] = {
   {22, 23, 24},  // 电机0: dirPin, stepPin, enaPin
   {25, 26, 27},  // 电机1
-  {28, 29, 30},  // 电机2
+  {28, 29, 30},  // 电机2    
   {31, 32, 33}   // 电机3
 };
 
@@ -58,15 +58,13 @@ void updateSliderSequences() {
         // 执行步进操作
         stepMotor(i);
       }
-      foundRunning = true; // 发现有滑块序列在运行
+      if (seq->isActive && seq->isRunning) {
+        foundRunning = true;
+      }
     }
   }
-  if (foundRunning) {
-    isAnySequenceRunning = true;
-    isSliderMoving = true;
-  } else {
-    isSliderMoving = false;
-  }
+  isSliderMoving = foundRunning;
+  isAnySequenceRunning = isAnySequenceRunning || isSliderMoving;
 
 }
 
@@ -212,36 +210,54 @@ void stopSliderSequence(int sequenceIndex) {
 }
 
 // 预定义动作序列函数（每个序列只控制一个电机）
-int slide_motor1_sequence() {
-  SliderAction actions[4];
-  actions[0] = {0, 1, 2.0, 1000, 500};    // 电机0顺时针，2转/秒，持续1秒，等待0.5秒
-  actions[1] = {0, 0, 1.5, 2000, 1000};   // 电机0逆时针，1.5转/秒，持续2秒，等待1秒
-  actions[2] = {0, 1, 3.0, 1500, 800};    // 电机0顺时针，3转/秒，持续1.5秒，等待0.8秒
-  actions[3] = {0, 0, 0.5, 3000, 0};      // 电机0逆时针，0.5转/秒，持续3秒
-  return addSliderSequence(actions, 4);
+int slide_lvbu_out() {
+  SliderAction actions[2];
+  actions[0] = {0, 0, 2.0, 2000, 0};    
+  actions[1] = {0, 0, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
+}
+int slide_lvbu_back() {
+  SliderAction actions[2];
+  actions[0] = {0, 1, 2.0, 2000, 0};    
+  actions[1] = {0, 1, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
 }
 
-int slide_motor2_sequence() {
-  SliderAction actions[3];
-  actions[0] = {1, 1, 1.0, 1500, 300};    // 电机1顺时针，1转/秒，持续1.5秒，等待0.3秒
-  actions[1] = {1, 0, 2.0, 1000, 700};    // 电机1逆时针，2转/秒，持续1秒，等待0.7秒
-  actions[2] = {1, 1, 1.5, 2000, 0};      // 电机1顺时针，1.5转/秒，持续2秒
-  return addSliderSequence(actions, 3);
+int slide_liubei_out() {
+  SliderAction actions[2];
+  actions[0] = {1, 1, 2.0, 2000, 0};    
+  actions[1] = {1, 1, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
+}
+int slide_liubei_back() {
+  SliderAction actions[2];
+  actions[0] = {1, 0, 2.0, 2000, 0};    
+  actions[1] = {1, 0, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
 }
 
-int slide_motor3_sequence() {
-  SliderAction actions[5];
-  actions[0] = {3, 1, 1.8, 2000, 400};    // 电机2顺时针，0.8转/秒，持续2秒，等待0.4秒
-  actions[1] = {3, 0, 2, 1800, 600};    // 电机2逆时针，1.2转/秒，持续1.8秒，等待0.6秒
-  actions[2] = {3, 1, 2.0, 1500, 300};    // 电机2顺时针，2转/秒，持续1.5秒，等待0.3秒
-  actions[3] = {3, 0, 3.0, 2500, 500};    // 电机2逆时针，1转/秒，持续2.5秒，等待0.5秒
-  actions[4] = {3, 1, 2.5, 1200, 0};      // 电机2顺时针，1.5转/秒，持续1.2秒
-  return addSliderSequence(actions, 5);
+int slide_guanyu_out() {
+  SliderAction actions[2];
+  actions[0] = {2, 1, 2.0, 2000, 0};    
+  actions[1] = {2, 1, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
+}
+int slide_guanyu_back() {
+  SliderAction actions[2];
+  actions[0] = {2, 0, 2.0, 2000, 0};    
+  actions[1] = {2, 0, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
 }
 
-int slide_motor4_out() {
+int slide_zhangfei_out() {
   SliderAction actions[2];
   actions[0] = {3, 1, 2.0, 2000, 0};    
   actions[1] = {3, 1, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
+}
+int slide_zhangfei_back() {
+  SliderAction actions[2];
+  actions[0] = {3, 0, 2.0, 2000, 0};    
+  actions[1] = {3, 0, 2.0, 1500, 0};    
   return addSliderSequence(actions, 2);
 }

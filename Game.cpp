@@ -3,6 +3,7 @@
 #include "Music_background.h"
 #include "GlobalVars.h"
 #include "Action_people.h"
+#include "Slider.h"
 #include <Arduino.h>
 
 unsigned long lastAudioEndTime = 0;
@@ -74,9 +75,10 @@ public:
         
         target->takeDamage(damage);
 
+        startSliderSequence(slide_lvbu_out()); 
         musicPlayer.playTrackOnce(3);   //攻击音乐
         lastAudioEndTime = millis();
-        //startSequence(action_lvbu_attack_front());      //攻击动作
+        startSequence(action_lvbu_attack_front());      //攻击动作     
     }
     
     void heal() override {
@@ -122,6 +124,8 @@ public:
         Serial.print(target->getName());
         Serial.println(F("造成4点伤害！"));
         target->takeDamage(attackDamage);
+
+        startSliderSequence(slide_liubei_out());
         musicPlayer.playTrackOnce(7);       //攻击音乐
         lastAudioEndTime = millis();
         startSequence(action_liubei_attack_front());        //攻击动作
@@ -130,6 +134,8 @@ public:
     void heal() override {
         Serial.println(F("刘备回血，恢复8点生命值！"));
         restoreHp(healAmount);
+
+        startSliderSequence(slide_liubei_out());
         musicPlayer.playTrackOnce(8);       //恢复音乐
         lastAudioEndTime = millis();
         startSequence(action_liubei_heal_front());      //恢复动作
@@ -378,6 +384,8 @@ void Game::lubuHeal() {
         music_error();
         return;
     }
+
+    startSliderSequence(slide_lvbu_out());
     musicPlayer.playTrackOnce(4);
     lastAudioEndTime = millis();
     startSequence(action_lvbu_heal_front());
@@ -394,10 +402,11 @@ void Game::lubuSkill1() {
     }    
 
     if (static_cast<LuBu*>(lubu)->skill1()) {
+        startSliderSequence(slide_lvbu_out());
         musicPlayer.playTrackOnce(5);
         lastAudioEndTime = millis();
-        //startSequence(action_lvbu_skill1_front());
-        //startSequence(action_lvbu_skill1_back());
+        startSequence(action_lvbu_skill1_front());
+        startSequence(action_lvbu_skill1_back());
         // 对全体英雄造成伤害
         if (liuBei->alive()) liuBei->takeDamage(8);
         if (guanYu->alive()) guanYu->takeDamage(8);
@@ -424,10 +433,11 @@ void Game::lubuSkill2(int targetIndex) {
     }
     
     if (target && target->alive() && static_cast<LuBu*>(lubu)->skill2(target)) {
+        startSliderSequence(slide_lvbu_out());
         musicPlayer.playTrackOnce(6);
         lastAudioEndTime = millis();
-        //startSequence(action_lvbu_skill2_front());
-        //startSequence(action_lvbu_skill2_back());
+        startSequence(action_lvbu_skill2_front());
+        startSequence(action_lvbu_skill2_back());
         target->takeDamage(12);
         lubu->restoreHp(6);
         nextTurn();
@@ -471,6 +481,8 @@ void Game::liuBeiSkill1() {
         if (liuBei->alive()) liuBei->restoreHp(10);
         if (guanYu->alive()) guanYu->restoreHp(10);
         if (zhangFei->alive()) zhangFei->restoreHp(10);
+
+        startSliderSequence(slide_liubei_out());
         musicPlayer.playTrackOnce(9);
         lastAudioEndTime = millis();
         startSequence(action_liubei_skill1_front());
@@ -493,6 +505,7 @@ void Game::liuBeiSkill2(int targetIndex) {
     }
     
     if (target && !target->alive() && static_cast<LiuBei*>(liuBei)->skill2(target)) {
+        startSliderSequence(slide_liubei_out());
         musicPlayer.playTrackOnce(10);
         lastAudioEndTime = millis();
         startSequence(action_liubei_skill2_front());
@@ -509,6 +522,7 @@ void Game::guanYuAttack() {
         return;
     }
 
+    startSliderSequence(slide_guanyu_out());
     musicPlayer.playTrackOnce(11);
     lastAudioEndTime = millis();
     startSequence(action_guanyu_attack_front());
@@ -525,6 +539,7 @@ void Game::guanYuHeal() {
         return;
     }
     
+    startSliderSequence(slide_guanyu_out());
     musicPlayer.playTrackOnce(12);
     lastAudioEndTime = millis();
     startSequence(action_guanyu_heal_front());
@@ -542,6 +557,7 @@ void Game::guanYuSkill1() {
     }
 
     if (static_cast<GuanYu*>(guanYu)->skill1()) {
+        startSliderSequence(slide_guanyu_out());
         musicPlayer.playTrackOnce(13);
         lastAudioEndTime = millis();
         startSequence(action_guanyu_skill1_front());
@@ -559,6 +575,7 @@ void Game::guanYuSkill2() {
     }
 
     if (static_cast<GuanYu*>(guanYu)->skill2(nullptr)) {
+        startSliderSequence(slide_guanyu_out());
         musicPlayer.playTrackOnce(14);
         lastAudioEndTime = millis();
         startSequence(action_guanyu_skill2_front());
@@ -575,6 +592,7 @@ void Game::zhangFeiAttack() {
         return;
     }
     
+    startSliderSequence(slide_zhangfei_out());
     musicPlayer.playTrackOnce(15);
     lastAudioEndTime = millis();
     startSequence(action_zhangfei_attack_front());
@@ -591,6 +609,7 @@ void Game::zhangFeiHeal() {
         return;
     }
     
+    startSliderSequence(slide_zhangfei_out());
     musicPlayer.playTrackOnce(16);
     lastAudioEndTime = millis();
     startSequence(action_zhangfei_heal_front());
@@ -608,6 +627,7 @@ void Game::zhangFeiSkill1() {
     }
 
     if (static_cast<ZhangFei*>(zhangFei)->skill1()) {
+        startSliderSequence(slide_zhangfei_out());
         musicPlayer.playTrackOnce(17);
         lastAudioEndTime = millis();
         startSequence(action_zhangfei_skill1_front());
@@ -625,6 +645,7 @@ void Game::zhangFeiSkill2() {
     }
 
     if (static_cast<ZhangFei*>(zhangFei)->skill2(nullptr)) {
+        startSliderSequence(slide_zhangfei_out());
         musicPlayer.playTrackOnce(18);
         lastAudioEndTime = millis();
         startSequence(action_zhangfei_skill2_front());

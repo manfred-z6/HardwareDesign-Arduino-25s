@@ -62,9 +62,13 @@ int slide_rotate();
 int slide_custom_pattern();
 void stepMotor(int sequenceIndex);
 
-int slide_motor1_sequence();
-int slide_motor2_sequence();
-int slide_motor3_sequence();
-int slide_motor4_out();
+int slide_lvbu_out();
+int slide_lvbu_back();
+int slide_liubei_out();
+int slide_liubei_back();
+int slide_guanyu_out();
+int slide_guanyu_back();
+int slide_zhangfei_out();
+int slide_zhangfei_back();
 
 #endif

@@ -44,6 +44,7 @@ void updateSequences() {
           Serial.print("Sequence ");
           Serial.print(i);
           Serial.println(" completed");
+          flag_slider = true;   //完成序列后，更改滑台标志，用于滑台返回
         }
       }
       foundRunning = true; // 发现有序列在运行
@@ -168,6 +169,7 @@ int action_lvbu_attack_front(){
   actions[0] = {6, 0, 40, 800};  
   actions[1] = {6, 1, 0, 200};  //舵机序号，方向，转动速度，转动时间
   actions[2] = {6, 1, 40, 850}; 
+  outslider_index = 1;
   return addActionSequence(actions, 3);
 }
 //吕布恢复
@@ -175,7 +177,8 @@ int action_lvbu_heal_front(){
   RotationAction actions[3];
   actions[0] = {6, 0, 10, 1200};  
   actions[1] = {6, 1, 0, 400};
-  actions[2] = {6, 1, 10, 1350}; 
+  actions[2] = {6, 1, 10, 1350};
+  outslider_index = 1; 
   return addActionSequence(actions, 3);
 }
 //吕布技能一
@@ -193,6 +196,7 @@ int action_lvbu_skill1_front(){
   actions[9] = {6, 1, 0,600};
   actions[10] = {6, 1, 80, 900}; 
   actions[11] = {6, 1, 0, 600};
+  outslider_index = 1;
   return addActionSequence(actions, 12);
 }
 int action_lvbu_skill1_back(){
@@ -213,6 +217,7 @@ int action_lvbu_skill2_front(){
   actions[4] = {6, 0, 20, 2500}; 
   actions[5] = {6, 0, 0, 1000};
   actions[6] = {6, 1, 80, 1200};
+  outslider_index = 1;
   return addActionSequence(actions, 7);
 }
 int action_lvbu_skill2_back(){
@@ -242,6 +247,7 @@ int action_guanyu_attack_front() {
   actions[0] = {0, 1, 40, 800};  
   actions[1] = {0, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
   actions[2] = {0, 0, 40, 800}; 
+  outslider_index = 3;
   return addActionSequence(actions, 3);
 }
 //关羽恢复
@@ -250,6 +256,7 @@ int action_guanyu_heal_front() {
   actions[0] = {0, 1, 10, 1200};  
   actions[1] = {0, 0, 0, 400};
   actions[2] = {0, 0, 10, 1200}; 
+  outslider_index = 3;
   return addActionSequence(actions, 3);
 }
 //关羽技能一
@@ -262,6 +269,7 @@ int action_guanyu_skill1_front(){
   actions[4] = {0, 1, 25, 1100};
   actions[5] = {0, 0, 0, 200};
   actions[6] = {0, 0, 25, 1100};
+  outslider_index = 3;
   return addActionSequence(actions, 7);
 }
 int action_guanyu_skill1_back(){
@@ -280,6 +288,7 @@ int action_guanyu_skill2_front(){
   actions[1] = {0, 1, 0, 600};
   actions[2] = {0, 1, 20, 400};
   actions[3] = {0, 0, 40, 750}; 
+  outslider_index = 3;
   return addActionSequence(actions, 4);
 }
 int action_guanyu_skill2_back(){
@@ -311,6 +320,7 @@ int action_liubei_attack_front(){
   actions[0] = {2, 1, 40, 800};  
   actions[1] = {2, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
   actions[2] = {2, 0, 40, 800}; 
+  outslider_index = 2;
   return addActionSequence(actions, 3);
 }
 //刘备治疗
@@ -319,6 +329,7 @@ int action_liubei_heal_front(){
   actions[0] = {2, 1, 10, 1200};  
   actions[1] = {2, 0, 0, 400};
   actions[2] = {2, 0, 10, 1200}; 
+  outslider_index = 2;
   return addActionSequence(actions, 3);
 }
 //刘备技能一
@@ -327,6 +338,7 @@ int action_liubei_skill1_front(){
   actions[0] = {2, 1, 40, 600};  
   actions[1] = {2, 0, 0, 4000};
   actions[2] = {2, 0, 40, 600}; 
+  outslider_index = 2;
   return addActionSequence(actions, 3);
 }
 int action_liubei_skill1_back(){
@@ -347,6 +359,7 @@ int action_liubei_skill2_front(){
   actions[0] = {2, 1, 40, 1000};  
   actions[1] = {2, 0, 0, 2500};
   actions[2] = {2, 0, 40, 1050}; 
+  outslider_index = 2;
   return addActionSequence(actions, 3);
 }
 int action_liubei_skill2_back(){
@@ -380,6 +393,7 @@ int action_zhangfei_attack_front(){
   actions[0] = {4, 1, 40, 900};  
   actions[1] = {4, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
   actions[2] = {4, 0, 40, 840}; 
+  outslider_index = 4;
   return addActionSequence(actions, 3);
 }
 //张飞恢复
@@ -388,6 +402,7 @@ int action_zhangfei_heal_front(){
   actions[0] = {4, 1, 10, 1200};  
   actions[1] = {4, 0, 0, 400};
   actions[2] = {4, 0, 10, 1000}; 
+  outslider_index = 4;
   return addActionSequence(actions, 3);
 }
 //张飞技能一
@@ -396,6 +411,7 @@ int action_zhangfei_skill1_front(){
   actions[0] = {4, 1, 40, 1030};  
   actions[1] = {4, 0, 0, 3000};
   actions[2] = {4, 0, 40, 950}; 
+  outslider_index = 4;
   return addActionSequence(actions, 3);
 }
 int action_zhangfei_skill1_back(){
@@ -411,6 +427,7 @@ int action_zhangfei_skill2_front(){
   actions[0] = {4, 1, 40, 1100};  
   actions[1] = {4, 0, 0, 4500};
   actions[2] = {4, 0, 40, 1000}; 
+  outslider_index = 4;
   return addActionSequence(actions, 3);
 }
 int action_zhangfei_skill2_back(){

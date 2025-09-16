@@ -1,6 +1,7 @@
 #include "Nfc.h"
 #include "Game.h"
 #include "Music.h"
+#include "GlobalVars.h"
 // 定义全局变量
 const unsigned long REQUIRED_DETECTION_TIME = 1000; // 需要连续检测到卡片500ms才算有效
 
@@ -149,6 +150,7 @@ void onUid1Detected() {
   Serial.println(F("Function for UID 1 executed"));
   game.lubuSkill1();
   showGameStatus(); 
+  lasttime_action_people = millis();
 }
 
 void onUid2Detected() {
@@ -156,6 +158,7 @@ void onUid2Detected() {
   Serial.println(F("Function for UID 2 executed"));
   game.liuBeiSkill2(1);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid3Detected() {
@@ -163,48 +166,56 @@ void onUid3Detected() {
   Serial.println(F("Function for UID 3 executed"));
   game.liuBeiSkill2(2);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid4Detected() {
   Serial.println(F("Function for UID 4 executed"));
   game.liuBeiAttack();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid5Detected() {
   Serial.println(F("Function for UID 5 executed"));
   game.liuBeiSkill1();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid6Detected() {
   Serial.println(F("Function for UID 6 executed"));
   game.liuBeiHeal();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid7Detected() {
   Serial.println(F("Function for UID 7 executed"));
   game.guanYuAttack();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid8Detected() {
   Serial.println(F("Function for UID 8 executed"));
   game.guanYuHeal();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid9Detected() {
   Serial.println(F("Function for UID 9 executed"));
   game.guanYuSkill1();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid10Detected() {
   Serial.println(F("Function for UID 10 executed"));
   game.guanYuSkill2();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid11Detected() {
@@ -217,60 +228,70 @@ void onUid12Detected() {
   Serial.println(F("Function for UID 12 executed"));
   game.zhangFeiHeal();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid13Detected() {
   Serial.println(F("Function for UID 13 executed"));
   game.zhangFeiSkill1();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid14Detected() {
   Serial.println(F("Function for UID 14 executed"));
   game.zhangFeiSkill2();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid15Detected() {
   Serial.println(F("Function for UID 15 executed"));
   game.lubuAttack(0);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid16Detected() {
   Serial.println(F("Function for UID 16 executed"));
   game.lubuAttack(1);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid17Detected() {
   Serial.println(F("Function for UID 17 executed"));
   game.lubuAttack(2);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid18Detected() {
   Serial.println(F("Function for UID 18 executed"));
   game.lubuHeal();
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid19Detected() {
   Serial.println(F("Function for UID 19 executed"));
   game.lubuSkill2(0);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid20Detected() {
   Serial.println(F("Function for UID 20 executed"));
   game.lubuSkill2(1);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUid21Detected() {
   Serial.println(F("Function for UID 21 executed"));
   game.lubuSkill2(2);
   showGameStatus();
+  lasttime_action_people = millis();
 }
 
 void onUnknownUidDetected() {

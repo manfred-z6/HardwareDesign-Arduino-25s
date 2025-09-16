@@ -14,7 +14,7 @@
 // 音乐播放器全局变量
 #define MUSIC_SERIAL Serial1    //使用Mega的Serial1硬件串口
 #define MUSIC_SERIAL2 Serial2   //使用Mega的Serial2硬件串口
-// 创建硬件对象
+
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI 
@@ -25,8 +25,6 @@ U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI
 #define BUTTON_2 6
 OneButton button1(BUTTON_1, true, true);
 OneButton button2(BUTTON_2, true, true);
-
-
 
 enum state_mode {
   MENU,
@@ -39,6 +37,7 @@ state_mode state = MENU;
 // OLED更新计时器
 unsigned long lastOledUpdateTime = 0;
 const unsigned long OLED_UPDATE_INTERVAL = 200; // OLED更新间隔(毫秒)
+const unsigned long ACTION_PEOPLE_INTERVAL = 2000;
 
 void setup() {
   Serial.begin(115200);
@@ -112,8 +111,11 @@ void loop() {
       // 更新所有滑块序列状态
       updateSliderSequences();
       // 在没有滑台移动时更新所有动作序列状态
-      if(!isSliderMoving){
+      if(!isSliderMoving && (millis() - lasttime_action_people > ACTION_PEOPLE_INTERVAL)){
         updateSequences();
+      }
+      if(!isAnySequenceRunning && (outslider_index != 5)){
+        slider_back();
       }
       // 定期更新OLED显示，避免频繁更新影响NFC读取
       if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL) {
@@ -151,7 +153,7 @@ void loop() {
   }
 }
 
-void menu_main() {
+void menu_main() {  
   u8g.firstPage();
   do{
     u8g.setFont(u8g_font_6x10);
@@ -159,6 +161,14 @@ void menu_main() {
     u8g.drawStr(8, 30, "(Long Press Button1)");
     u8g.drawStr(8, 45, "2.GAME MODE");
     u8g.drawStr(8, 60, "(Long Press Button2)");
+  }while(u8g.nextPage());
+}
+
+void menu_plot(){
+  u8g.firstPage();
+  do{
+    u8g.setFont(u8g_font_10x20);
+    u8g.drawStr(4, 32, "PLOT MODE");
   }while(u8g.nextPage());
 }
 
@@ -201,19 +211,40 @@ void displayGameStatus(){
   } while(u8g.nextPage());
 }
 
-void menu_plot(){
-  u8g.firstPage();
-  do{
-    u8g.setFont(u8g_font_10x20);
-    u8g.drawStr(4, 32, "PLOT MODE");
-  }while(u8g.nextPage());
+void slider_back(){
+  switch(outslider_index){
+    case 1: {
+      startSliderSequence(slide_lvbu_back());
+      Serial.println(F("滑台已返回"));
+      outslider_index = 5;
+      break;
+    }
+    case 2: {
+      startSliderSequence(slide_liubei_back());
+      Serial.println(F("滑台已返回"));
+      outslider_index = 5;
+      break;
+    }
+    case 3: {
+      startSliderSequence(slide_guanyu_back());
+      Serial.println(F("滑台已返回"));
+      outslider_index = 5;
+      break;
+    }
+    case 4: {
+      startSliderSequence(slide_zhangfei_back());
+      Serial.println(F("滑台已返回"));
+      outslider_index = 5;
+      break;
+    }
+    default: break;
+  }
 }
 
 // 按钮回调函数
 void onClick1() {
   Serial.println(F("Button1 clicked"));
- startSequence(action_lvbu_die_front());
- startSequence(action_lvbu_die_back());
+ //startSliderSequence(slide_motor4_out());
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));
@@ -229,6 +260,7 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println(F("Button2 clicked"));
+  //startSliderSequence(slide_motor4_back());
 }
 void onLongPress2() {
   Serial.println(F("Button2 long-pressed"));
