@@ -26,10 +26,7 @@ U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI
 OneButton button1(BUTTON_1, true, true);
 OneButton button2(BUTTON_2, true, true);
 
-//定义全局变量
-volatile bool isAnySequenceRunning = false; //判断是否有动作序列在执行
-volatile bool isSliderMoving = false;   //判断是否有滑台在移动
-volatile bool flag1, flag2, flag3, flag4;
+
 
 enum state_mode {
   MENU,
@@ -38,9 +35,6 @@ enum state_mode {
 };
 state_mode state = MENU;
 
-// NFC读取计时器
-unsigned long lastNfcReadTime = 0;
-const unsigned long NFC_READ_INTERVAL = 100; // NFC读取间隔(毫秒)
 
 // OLED更新计时器
 unsigned long lastOledUpdateTime = 0;

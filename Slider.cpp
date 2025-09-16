@@ -240,7 +240,8 @@ int slide_motor3_sequence() {
 }
 
 int slide_motor4_out() {
-  SliderAction actions[1];
-  actions[0] = {3, 1, 4.0, 2000, 0};    
-  return addSliderSequence(actions, 1);
+  SliderAction actions[2];
+  actions[0] = {3, 1, 2.0, 2000, 0};    
+  actions[1] = {3, 1, 2.0, 1500, 0};    
+  return addSliderSequence(actions, 2);
 }
