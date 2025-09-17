@@ -7,7 +7,7 @@ bool motorChannelOccupied[MOTOR_COUNT] = {false};
 
 // 电机引脚配置
 MotorPins motorPins[MOTOR_COUNT] = {
-  {22, 23, 24},  // 电机0: dirPin, stepPin, enaPin
+  {22, 23, 24},  // 电机0: dirPin, pulPin, enaPin
   {25, 26, 27},  // 电机1
   {28, 29, 30},  // 电机2    
   {31, 32, 33}   // 电机3
@@ -213,51 +213,51 @@ void stopSliderSequence(int sequenceIndex) {
 int slide_lvbu_out() {
   SliderAction actions[2];
   actions[0] = {0, 0, 2.0, 2000, 0};    
-  actions[1] = {0, 0, 2.0, 1500, 0};    
+  actions[1] = {0, 0, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 int slide_lvbu_back() {
   SliderAction actions[2];
   actions[0] = {0, 1, 2.0, 2000, 0};    
-  actions[1] = {0, 1, 2.0, 1500, 0};    
+  actions[1] = {0, 1, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 
 int slide_liubei_out() {
   SliderAction actions[2];
   actions[0] = {1, 1, 2.0, 2000, 0};    
-  actions[1] = {1, 1, 2.0, 1500, 0};    
+  actions[1] = {1, 1, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 int slide_liubei_back() {
   SliderAction actions[2];
   actions[0] = {1, 0, 2.0, 2000, 0};    
-  actions[1] = {1, 0, 2.0, 1500, 0};    
+  actions[1] = {1, 0, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 
 int slide_guanyu_out() {
   SliderAction actions[2];
   actions[0] = {2, 1, 2.0, 2000, 0};    
-  actions[1] = {2, 1, 2.0, 1500, 0};    
+  actions[1] = {2, 1, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 int slide_guanyu_back() {
   SliderAction actions[2];
   actions[0] = {2, 0, 2.0, 2000, 0};    
-  actions[1] = {2, 0, 2.0, 1500, 0};    
+  actions[1] = {2, 0, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 
 int slide_zhangfei_out() {
   SliderAction actions[2];
   actions[0] = {3, 1, 2.0, 2000, 0};    
-  actions[1] = {3, 1, 2.0, 1500, 0};    
+  actions[1] = {3, 1, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }
 int slide_zhangfei_back() {
   SliderAction actions[2];
   actions[0] = {3, 0, 2.0, 2000, 0};    
-  actions[1] = {3, 0, 2.0, 1500, 0};    
+  actions[1] = {3, 0, 2.0, 1000, 0};    
   return addSliderSequence(actions, 2);
 }

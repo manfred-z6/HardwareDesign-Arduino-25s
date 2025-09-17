@@ -114,8 +114,9 @@ void loop() {
       if(!isSliderMoving && (millis() - lasttime_action_people > ACTION_PEOPLE_INTERVAL)){
         updateSequences();
       }
-      if(!isAnySequenceRunning && (outslider_index != 5)){
+      if(flag_slider){
         slider_back();
+        flag_slider = false;
       }
       // 定期更新OLED显示，避免频繁更新影响NFC读取
       if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL) {
@@ -244,7 +245,7 @@ void slider_back(){
 // 按钮回调函数
 void onClick1() {
   Serial.println(F("Button1 clicked"));
- //startSliderSequence(slide_motor4_out());
+ startSliderSequence(slide_lvbu_out());
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));
@@ -260,7 +261,7 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println(F("Button2 clicked"));
-  //startSliderSequence(slide_motor4_back());
+  startSliderSequence(slide_lvbu_back());
 }
 void onLongPress2() {
   Serial.println(F("Button2 long-pressed"));
