@@ -37,7 +37,6 @@ state_mode state = MENU;
 // OLED更新计时器
 unsigned long lastOledUpdateTime = 0;
 const unsigned long OLED_UPDATE_INTERVAL = 200; // OLED更新间隔(毫秒)
-const unsigned long ACTION_PEOPLE_INTERVAL = 2000;
 
 void setup() {
   Serial.begin(115200);
@@ -111,9 +110,10 @@ void loop() {
       // 更新所有滑块序列状态
       updateSliderSequences();
       // 在没有滑台移动时更新所有动作序列状态
-      if(!isSliderMoving && (millis() - lasttime_action_people > ACTION_PEOPLE_INTERVAL)){
+      if(!isSliderMoving && (millis() - lasttime_action_people >= ACTION_PEOPLE_INTERVAL)){ 
         updateSequences();
       }
+      
       if(flag_slider){
         slider_back();
         flag_slider = false;
@@ -278,6 +278,7 @@ void onLongPress2() {
       state = MENU;
       Serial.println(F("已返回菜单"));
       musicPlayer2.stop();
+      musicPlayer.stop();
       break;
     }
     default: break;
