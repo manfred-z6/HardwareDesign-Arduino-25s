@@ -37,10 +37,12 @@ state_mode state = MENU;
 // OLED更新计时器
 unsigned long lastOledUpdateTime = 0;
 const unsigned long OLED_UPDATE_INTERVAL = 200; // OLED更新间隔(毫秒)
+const unsigned long ACTION_PEOPLE_INTERVAL = 3000;
+const unsigned long BACK_INTERVAL = 2000;
 
 void setup() {
   Serial.begin(115200);
-  
+
   // 初始化PCA9685舵机驱动
   pwm.begin();
   pwm.setPWMFreq(50);  // 设置PWM频率为50Hz，适用于标准舵机
@@ -65,7 +67,7 @@ void setup() {
   // 初始化音乐播放器
   MUSIC_SERIAL.begin(9600);
   if (!musicPlayer.begin(MUSIC_SERIAL)) {
-    Serial.println(F("音乐播放器初始化失败，系统继续运行但无音频功能"));
+    //Serial.println(F("音乐播放器初始化失败，系统继续运行但无音频功能"));
   } else {
     Serial.println(F("音乐播放器初始化成功"));
   }
@@ -73,10 +75,11 @@ void setup() {
   // 初始化音乐播放器2
   MUSIC_SERIAL2.begin(9600);
   if (!musicPlayer2.begin(MUSIC_SERIAL2)) {
-    Serial.println(F("音乐播放器2初始化失败，系统继续运行但无音频功能"));
+    //Serial.println(F("音乐播放器2初始化失败，系统继续运行但无音频功能"));
   } else {
     Serial.println(F("音乐播放器2初始化成功"));
   }
+
 
   Serial.println(F("System Initialization Complete."));
 }
@@ -114,7 +117,7 @@ void loop() {
         updateSequences();
       }
       
-      if(flag_slider){
+      if(flag_slider && !isAnySequenceRunning && (millis() - time_action_end > BACK_INTERVAL)){
         slider_back();
         flag_slider = false;
       }
@@ -193,20 +196,20 @@ void displayGameStatus(){
     // 显示当前回合
     u8g.setFont(u8g_font_6x10);
     if (game.getIsLuBuTurn()) {
-      u8g.drawStr(32, 10, "LVBU Turn");
+      u8g.drawStr(32, 10, F("LVBU Turn"));
     } else {
-      u8g.drawStr(32, 10, "HERO Turn");
+      u8g.drawStr(32, 10, F("HERO Turn"));
     }
     
     // 显示游戏状态（如果游戏结束）
     if (game.isGameOver()) {
       u8g.setFont(u8g_font_6x10);
       if (!game.isLuBuAlive()) {
-        u8g.drawStr(90, 22, "Hero Win!");
+        u8g.drawStr(90, 22, F("Hero Win!"));
       } else if (!game.isLiuBeiAlive() && 
                  !game.isGuanYuAlive() && 
                  !game.isZhangFeiAlive()) {
-        u8g.drawStr(90, 22, "LVBU Win!");
+        u8g.drawStr(90, 22, F("LVBU Win!"));
       }
     }
   } while(u8g.nextPage());

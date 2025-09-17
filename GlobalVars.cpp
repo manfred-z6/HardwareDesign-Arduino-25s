@@ -8,4 +8,4 @@ volatile bool flag1 = false, flag2 = false, flag3 = false, flag4 = false;
 volatile bool flag_slider = false;
 volatile uint8_t outslider_index = 5;
 volatile unsigned long lasttime_action_people = 0;
-const unsigned long ACTION_PEOPLE_INTERVAL = 2000;
+volatile unsigned long time_action_end = 0;

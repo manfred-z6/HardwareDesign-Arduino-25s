@@ -45,6 +45,7 @@ void updateSequences() {
           Serial.print(i);
           Serial.println(" completed");
           flag_slider = true;   //完成序列后，更改滑台标志，用于滑台返回
+          time_action_end = millis();
         }
       }
       foundRunning = true; // 发现有序列在运行
@@ -198,10 +199,30 @@ int action_lvbu_skill1_front(){
   actions[9] = {0, 0, 80, 900};  
   actions[10] = {0, 1, 0,600};
   actions[11] = {0, 1, 80, 900}; 
+  outslider_index = 1;
+  return addActionSequence(actions, 12);
+}
+/*
+int action_lvbu_skill1_front(){
+  RotationAction actions[13];
+  actions[0] = {0, 0, 0, 100};
+  actions[1] = {0, 0, 60, 900};  
+  actions[2] = {0, 1, 0, 600};
+  actions[3] = {0, 1, 60, 920}; 
+  actions[4] = {0, 1, 0, 600};
+  actions[5] = {0, 0, 70, 900};  
+  actions[6] = {0, 1, 0, 600};
+  actions[7] = {0, 1, 70, 920}; 
+  actions[8] = {0, 1, 0, 600};
+  actions[9] = {0, 0, 80, 900};  
+  actions[10] = {0, 1, 0,600};
+  actions[11] = {0, 1, 80, 900}; 
   actions[12] = {0, 1, 0, 600};
   outslider_index = 1;
   return addActionSequence(actions, 13);
 }
+*/
+
 int action_lvbu_skill1_back(){
   RotationAction actions[5];
   actions[0] = {1, 0, 0, 100};
