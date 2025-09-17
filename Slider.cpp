@@ -12,7 +12,7 @@ MotorPins motorPins[MOTOR_COUNT] = {
   {28, 29, 30},  // 电机2    
   {31, 32, 33}   // 电机3
 };
-
+       
 // 初始化电机引脚
 void initSliderMotors() {
   for (int i = 0; i < MOTOR_COUNT; i++) {

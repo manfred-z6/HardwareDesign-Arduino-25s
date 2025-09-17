@@ -186,7 +186,7 @@ int action_lvbu_heal_front(){
 }
 //吕布技能一
 int action_lvbu_skill1_front(){
-  RotationAction actions[12];
+  RotationAction actions[9];
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 60, 900};  
   actions[2] = {0, 1, 0, 600};
@@ -196,11 +196,11 @@ int action_lvbu_skill1_front(){
   actions[6] = {0, 1, 0, 600};
   actions[7] = {0, 1, 70, 920}; 
   actions[8] = {0, 1, 0, 600};
-  actions[9] = {0, 0, 80, 900};  
-  actions[10] = {0, 1, 0,600};
-  actions[11] = {0, 1, 80, 900}; 
+  //actions[9] = {0, 0, 80, 900};  
+  //actions[10] = {0, 1, 0,600};
+  //actions[11] = {0, 1, 80, 900}; 
   outslider_index = 1;
-  return addActionSequence(actions, 12);
+  return addActionSequence(actions, 9);
 }
 /*
 int action_lvbu_skill1_front(){
@@ -302,7 +302,7 @@ int action_liubei_skill1_front(){
   return addActionSequence(actions, 5);
 }
 int action_liubei_skill1_back(){
-  RotationAction actions[10];
+  RotationAction actions[9];
   actions[0] = {3, 0, 0, 100};
   actions[1] = {3, 0, 0, 100};
   actions[2] = {3, 0, 0, 600};
@@ -312,8 +312,7 @@ int action_liubei_skill1_back(){
   actions[6] = {3, 1, 30, 500};
   actions[7] = {3, 0, 30, 500};
   actions[8] = {3, 1, 30, 500};
-  actions[9] = {3, 1, 0, 600};
-  return addActionSequence(actions, 10);
+  return addActionSequence(actions, 9);
 }
 //刘备技能二
 int action_liubei_skill2_front(){
