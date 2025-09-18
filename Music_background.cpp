@@ -20,7 +20,7 @@ bool MusicPlayer2::begin(HardwareSerial& serial) {
   }
   
   Serial.println(F("DFPlayer Mini 2 就绪!"));
-  myDFPlayer.volume(30);
+  myDFPlayer.volume(20);
   myDFPlayer.EQ(DFPLAYER_EQ_NORMAL);
   
   return true;

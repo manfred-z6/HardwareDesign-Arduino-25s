@@ -12,16 +12,12 @@ struct RotationAction {
   uint8_t servoChannel : 4;  // 要控制的舵机通道 (0-15)
   uint8_t direction : 1;     // 方向：0顺时针，1逆时针
   uint8_t speed : 7;         // 速度：0-100%
-  unsigned long duration;    // 持续时间：毫秒
+  uint16_t duration;    // 持续时间：毫秒
 };
 
-// 定义每个独立动作序列的状态结构体
+// 定义每个独立动作序列的状态结构体   
 struct ActionSequenceState {
-<<<<<<< HEAD
-  RotationAction sequence[9]; // 该序列的动作数组
-=======
   RotationAction sequence[10]; // 该序列的动作数组
->>>>>>> bugfix
   int actionCount;             // 该序列的动作数量
   int currentActionIndex;      // 该序列当前执行的动作索引
   bool isRunning;              // 该序列是否正在运行
@@ -58,7 +54,6 @@ int action_guanyu_skill2_front();
 int action_guanyu_skill2_back();
 int action_guanyu_die_front();
 int action_guanyu_die_back();
-int action_guanyu_revive_back();
 int action_liubei_attack_front();
 int action_liubei_heal_front();
 int action_liubei_skill1_front();
@@ -67,7 +62,6 @@ int action_liubei_skill2_front();
 int action_liubei_skill2_back();
 int action_liubei_die_front();
 int action_liubei_die_back();
-int action_liubei_revive_back();
 int action_zhangfei_attack_front();
 int action_zhangfei_heal_front();
 int action_zhangfei_skill1_front();
@@ -76,7 +70,6 @@ int action_zhangfei_skill2_front();
 int action_zhangfei_skill2_back();
 int action_zhangfei_die_front();
 int action_zhangfei_die_back();
-int action_zhangfei_revive_back();
 uint16_t getPulseWidth(unsigned long microseconds);
 
 #endif

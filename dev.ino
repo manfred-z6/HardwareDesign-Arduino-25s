@@ -18,7 +18,7 @@
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI 
-
+  
 
 // 按钮定义
 #define BUTTON_1 5
@@ -161,10 +161,10 @@ void menu_main() {
   u8g.firstPage();
   do{
     u8g.setFont(u8g_font_6x10);
-    u8g.drawStr(8, 15, "1.PLOT MODE");
-    u8g.drawStr(8, 30, "(Long Press Button1)");
-    u8g.drawStr(8, 45, "2.GAME MODE");
-    u8g.drawStr(8, 60, "(Long Press Button2)");
+    u8g.drawStr(8, 15, F("1.PLOT MODE"));
+    u8g.drawStr(8, 30, F("(Long Press Button1)"));
+    u8g.drawStr(8, 45, F("2.GAME MODE"));
+    u8g.drawStr(8, 60, F("(Long Press Button2)"));
   }while(u8g.nextPage());
 }
 
@@ -248,7 +248,9 @@ void slider_back(){
 // 按钮回调函数
 void onClick1() {
   Serial.println(F("Button1 clicked"));
- startSliderSequence(slide_lvbu_out());
+  startSliderSequence(slide_zhangfei_out());
+  //startSequence(action_lvbu_skill1_front());
+  //startSequence(action_liubei_skill1_back());
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));
@@ -264,7 +266,9 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println(F("Button2 clicked"));
-  startSliderSequence(slide_lvbu_back());
+  startSliderSequence(slide_zhangfei_back());
+  //startSequence(action_lvbu_skill2_front());
+  //startSequence(action_zhangfei_skill2_back());
 }
 void onLongPress2() {
   Serial.println(F("Button2 long-pressed"));

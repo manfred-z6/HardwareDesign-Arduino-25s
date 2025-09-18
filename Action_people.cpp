@@ -1,8 +1,8 @@
 #include "Action_people.h"
 #include "GlobalVars.h"
 // 定义全局变量
-const int MAX_CONCURRENT_SEQUENCES = 20;
-const int MAX_ACTION_SINGLESEQ = 20;
+const int MAX_CONCURRENT_SEQUENCES = 10;
+const int MAX_ACTION_SINGLESEQ = 10;
 ActionSequenceState activeSequences[MAX_CONCURRENT_SEQUENCES] = {};
 int activeSequenceCount = 0;
 bool servoChannelOccupied[16] = {false};
@@ -186,87 +186,47 @@ int action_lvbu_heal_front(){
 }
 //吕布技能一
 int action_lvbu_skill1_front(){
-<<<<<<< HEAD
-  RotationAction actions[9];
+  RotationAction actions[8];
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 60, 900};  
-  actions[2] = {0, 1, 0, 600};
-  actions[3] = {0, 1, 60, 920}; 
-  actions[4] = {0, 1, 0, 600};
-  actions[5] = {0, 0, 70, 900};  
-  actions[6] = {0, 1, 0, 600};
-  actions[7] = {0, 1, 70, 920}; 
-  actions[8] = {0, 1, 0, 600};
-  //actions[9] = {0, 0, 80, 900};  
-  //actions[10] = {0, 1, 0,600};
-  //actions[11] = {0, 1, 80, 900}; 
+  actions[2] = {0, 1, 0, 200};
+  actions[3] = {0, 1, 60, 900}; 
+  actions[4] = {0, 1, 0, 200};
+  actions[5] = {0, 0, 70, 700};  
+  actions[6] = {0, 1, 0, 200};
+  actions[7] = {0, 1, 70, 700}; 
   outslider_index = 1;
-  return addActionSequence(actions, 9);
+  return addActionSequence(actions, 8);
 }
-/*
-int action_lvbu_skill1_front(){
-  RotationAction actions[13];
-=======
-  RotationAction actions[1];
-  actions[0] = {0, 0, 0, 100};
-  outslider_index = 1;
-  return addActionSequence(actions, 1);
-}
-/*
-int action_lvbu_skill1_front(){
-  RotationAction actions[12];
->>>>>>> bugfix
-  actions[0] = {0, 0, 0, 100};
-  actions[1] = {0, 0, 60, 900};  
-  actions[2] = {0, 1, 0, 600};
-  actions[3] = {0, 1, 60, 920}; 
-  actions[4] = {0, 1, 0, 600};
-  actions[5] = {0, 0, 70, 900};  
-  actions[6] = {0, 1, 0, 600};
-  actions[7] = {0, 1, 70, 920}; 
-  actions[8] = {0, 1, 0, 600};
-  actions[9] = {0, 0, 80, 900};  
-  actions[10] = {0, 1, 0,600};
-  actions[11] = {0, 1, 80, 900}; 
-  outslider_index = 1;
-<<<<<<< HEAD
-  return addActionSequence(actions, 13);
-}
-*/
 
-=======
-  return addActionSequence(actions, 12);
-}*/
->>>>>>> bugfix
 int action_lvbu_skill1_back(){
-  RotationAction actions[5];
+  RotationAction actions[4];
   actions[0] = {1, 0, 0, 100};
-  actions[1] = {1, 0, 0, 3000};  
-  actions[2] = {1, 1, 0, 3000};  
-  actions[3] = {1, 0, 40, 1600};  
-  actions[4] = {1, 1, 40, 1600};  
-  return addActionSequence(actions, 5);
+  actions[1] = {1, 0, 0, 2200};    
+  actions[2] = {1, 0, 40, 900};  
+  actions[3] = {1, 1, 40, 700};  
+  return addActionSequence(actions, 4);
 }
 //吕布技能二
 int action_lvbu_skill2_front(){
   RotationAction actions[8];
   actions[0] = {0, 0, 0, 100};
-  actions[1] = {0, 0, 40, 600};  
-  actions[2] = {0, 1, 0, 1000};
-  actions[3] = {0, 1, 40, 600}; 
-  actions[4] = {0, 0, 0, 500};
-  actions[5] = {0, 0, 20, 2500}; 
-  actions[6] = {0, 0, 0, 1000};
-  actions[7] = {0, 1, 80, 1200};
+  actions[1] = {0, 0, 40, 400};  
+  actions[2] = {0, 1, 0, 200};
+  actions[3] = {0, 1, 40, 400}; 
+  actions[4] = {0, 0, 0, 200};
+  actions[5] = {0, 0, 30, 800}; 
+  actions[6] = {0, 0, 0, 200};
+  actions[7] = {0, 1, 70, 300};
   outslider_index = 1;
   return addActionSequence(actions, 8);
 }
 int action_lvbu_skill2_back(){
   RotationAction actions[4];
   actions[0] = {1, 0, 0, 100};
-  actions[1] = {1, 0, 0, 5000};  
-  actions[2] = {1, 0, 40, 1200};
-  actions[3] = {1, 1, 40, 1200};  
+  actions[1] = {1, 0, 0, 1200};  
+  actions[2] = {1, 0, 50, 1000};
+  actions[3] = {1, 1, 0, 300};  
    return addActionSequence(actions, 4);
 }
 //吕布阵亡
@@ -274,7 +234,7 @@ int action_lvbu_die_front(){
   RotationAction actions[4];
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 20, 1550};
-  actions[2] = {0, 0, 0, 4500};  
+  actions[2] = {0, 0, 0, 2500};  
   actions[3] = {0, 1, 20, 1600}; 
   return addActionSequence(actions, 4);
 }
@@ -282,7 +242,7 @@ int action_lvbu_die_back(){
   RotationAction actions[3];
   actions[0] = {1, 0, 0, 100};
   actions[1] = {1, 0, 90, 4000};  
-  actions[2] = {1, 0, 0, 4000}; 
+  actions[2] = {1, 0, 0, 1700}; 
   return addActionSequence(actions, 3);
 }
 //刘备攻击
@@ -353,7 +313,7 @@ int action_liubei_die_front(){
   RotationAction actions[4];
   actions[0] = {2, 0, 0, 100};
   actions[1] = {2, 1, 20, 1550};
-  actions[2] = {2, 1, 0, 4500};  
+  actions[2] = {2, 1, 0, 2500};  
   actions[3] = {2, 0, 20, 1550}; 
   return addActionSequence(actions, 4);
 }
@@ -361,12 +321,10 @@ int action_liubei_die_back(){
   RotationAction actions[3];
   actions[0] = {3, 0, 0, 100};
   actions[1] = {3, 1, 90, 4000};  
-  actions[2] = {3, 1, 0, 4000}; 
+  actions[2] = {3, 1, 0, 1700}; 
   return addActionSequence(actions, 3);
 }
-//刘备归位
-int action_liubei_revive_back(){
-}
+
 //关羽攻击
 int action_guanyu_attack_front() {
   RotationAction actions[4];
@@ -435,7 +393,7 @@ int action_guanyu_die_front(){
   RotationAction actions[4];
   actions[0] = {4, 0, 0, 100};
   actions[1] = {4, 1, 20, 1550};
-  actions[2] = {4, 1, 0, 4500};  
+  actions[2] = {4, 1, 0, 2500};  
   actions[3] = {4, 0, 20, 1730}; 
   return addActionSequence(actions, 4);
 }
@@ -443,11 +401,9 @@ int action_guanyu_die_back(){
   RotationAction actions[3];
   actions[0] = {5, 0, 0, 100};
   actions[1] = {5, 1, 90, 4000};  
-  actions[2] = {5, 1, 0, 4000}; 
+  actions[2] = {5, 1, 0, 1700}; 
   return addActionSequence(actions, 3);
 }
-//关羽复活
-int action_guanyu_revive_back(){}
 
 //张飞攻击
 int action_zhangfei_attack_front(){
@@ -483,8 +439,8 @@ int action_zhangfei_skill1_back(){
   RotationAction actions[4];
   actions[0] = {7, 0, 0, 100};
   actions[1] = {7, 0, 0, 1050};
-  actions[2] = {7, 0,50, 2500};
-  actions[3] = {7, 0,0, 2000};
+  actions[2] = {7, 0, 50, 2500};
+  actions[3] = {7, 0, 0, 2000};
   return addActionSequence(actions, 4);
 }
 //张飞技能二
@@ -515,7 +471,7 @@ int action_zhangfei_die_front(){
   RotationAction actions[4];
   actions[0] = {6, 0, 0, 100};
   actions[1] = {6, 1, 30, 1550};
-  actions[2] = {6, 1, 0, 4500};  
+  actions[2] = {6, 1, 0, 2500};  
   actions[3] = {6, 0, 30, 1300}; 
   return addActionSequence(actions, 4);
 }
@@ -523,6 +479,6 @@ int action_zhangfei_die_back(){
   RotationAction actions[3];
   actions[0] = {7, 0, 0, 100};
   actions[1] = {7, 1, 90, 4000};  
-  actions[2] = {7, 1, 0, 4000}; 
+  actions[2] = {7, 1, 0, 1700}; 
   return addActionSequence(actions, 3);
 }
