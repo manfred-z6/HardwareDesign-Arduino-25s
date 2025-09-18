@@ -17,7 +17,11 @@ struct RotationAction {
 
 // 定义每个独立动作序列的状态结构体
 struct ActionSequenceState {
+<<<<<<< HEAD
   RotationAction sequence[9]; // 该序列的动作数组
+=======
+  RotationAction sequence[10]; // 该序列的动作数组
+>>>>>>> bugfix
   int actionCount;             // 该序列的动作数量
   int currentActionIndex;      // 该序列当前执行的动作索引
   bool isRunning;              // 该序列是否正在运行

@@ -186,6 +186,7 @@ int action_lvbu_heal_front(){
 }
 //吕布技能一
 int action_lvbu_skill1_front(){
+<<<<<<< HEAD
   RotationAction actions[9];
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 60, 900};  
@@ -205,6 +206,16 @@ int action_lvbu_skill1_front(){
 /*
 int action_lvbu_skill1_front(){
   RotationAction actions[13];
+=======
+  RotationAction actions[1];
+  actions[0] = {0, 0, 0, 100};
+  outslider_index = 1;
+  return addActionSequence(actions, 1);
+}
+/*
+int action_lvbu_skill1_front(){
+  RotationAction actions[12];
+>>>>>>> bugfix
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 60, 900};  
   actions[2] = {0, 1, 0, 600};
@@ -217,12 +228,16 @@ int action_lvbu_skill1_front(){
   actions[9] = {0, 0, 80, 900};  
   actions[10] = {0, 1, 0,600};
   actions[11] = {0, 1, 80, 900}; 
-  actions[12] = {0, 1, 0, 600};
   outslider_index = 1;
+<<<<<<< HEAD
   return addActionSequence(actions, 13);
 }
 */
 
+=======
+  return addActionSequence(actions, 12);
+}*/
+>>>>>>> bugfix
 int action_lvbu_skill1_back(){
   RotationAction actions[5];
   actions[0] = {1, 0, 0, 100};
