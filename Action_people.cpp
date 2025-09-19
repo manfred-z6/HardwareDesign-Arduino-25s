@@ -215,9 +215,9 @@ int action_lvbu_skill2_front(){
   actions[2] = {0, 1, 0, 200};
   actions[3] = {0, 1, 40, 400}; 
   actions[4] = {0, 0, 0, 200};
-  actions[5] = {0, 0, 30, 800}; 
+  actions[5] = {0, 0, 40, 800}; 
   actions[6] = {0, 0, 0, 200};
-  actions[7] = {0, 1, 70, 300};
+  actions[7] = {0, 1, 40, 800};
   outslider_index = 1;
   return addActionSequence(actions, 8);
 }
@@ -226,7 +226,7 @@ int action_lvbu_skill2_back(){
   actions[0] = {1, 0, 0, 100};
   actions[1] = {1, 0, 0, 1200};  
   actions[2] = {1, 0, 50, 1000};
-  actions[3] = {1, 1, 0, 300};  
+  actions[3] = {1, 1, 0, 800};  
    return addActionSequence(actions, 4);
 }
 //吕布阵亡

@@ -20,7 +20,7 @@ void initSliderMotors() {
     pinMode(motorPins[i].stepPin, OUTPUT);
     pinMode(motorPins[i].enaPin, OUTPUT);
     digitalWrite(motorPins[i].enaPin, HIGH); // 初始禁用电机
-  }
+  }  
 }
 
 
@@ -211,53 +211,46 @@ void stopSliderSequence(int sequenceIndex) {
 
 // 预定义动作序列函数（每个序列只控制一个电机）
 int slide_lvbu_out() {
-  SliderAction actions[2];
-  actions[0] = {0, 0, 2.0, 2000, 0};    
-  actions[1] = {0, 0, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {0, 0, 2.0, 2000, 0};       
+  return addSliderSequence(actions, 1);
 }
 int slide_lvbu_back() {
-  SliderAction actions[2];
-  actions[0] = {0, 1, 2.0, 2000, 0};    
-  actions[1] = {0, 1, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {0, 1, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 
 int slide_liubei_out() {
-  SliderAction actions[2];
-  actions[0] = {1, 1, 2.0, 2000, 0};    
-  actions[1] = {1, 1, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {1, 1, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 int slide_liubei_back() {
-  SliderAction actions[2];
-  actions[0] = {1, 0, 2.0, 2000, 0};    
-  actions[1] = {1, 0, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {1, 0, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 
 int slide_guanyu_out() {
-  SliderAction actions[2];
-  actions[0] = {2, 1, 2.0, 2000, 0};    
-  actions[1] = {2, 1, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {2, 1, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 int slide_guanyu_back() {
-  SliderAction actions[2];
-  actions[0] = {2, 0, 2.0, 2000, 0};    
-  actions[1] = {2, 0, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {2, 0, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 
 int slide_zhangfei_out() {
-  SliderAction actions[2];
-  actions[0] = {3, 1, 2.0, 2000, 0};    
-  actions[1] = {3, 1, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {3, 1, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
 int slide_zhangfei_back() {
-  SliderAction actions[2];
-  actions[0] = {3, 0, 2.0, 2000, 0};    
-  actions[1] = {3, 0, 2.0, 1000, 0};    
-  return addSliderSequence(actions, 2);
+  SliderAction actions[1];
+  actions[0] = {3, 0, 2.0, 2000, 0};        
+  return addSliderSequence(actions, 1);
 }
+ 
