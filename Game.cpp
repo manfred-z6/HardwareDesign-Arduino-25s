@@ -7,7 +7,7 @@
 #include <Arduino.h>
 
 unsigned long lastAudioEndTime = 0;
-const unsigned long AUDIO_COOLDOWN = 3700; // 冷却时间
+const unsigned long AUDIO_COOLDOWN = 4000; // 冷却时间
 
 // 定义全局游戏对象
 Game game;
