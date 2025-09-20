@@ -1,11 +1,12 @@
-#ifndef __ACTION_PEOPLE_H
-#define __ACTION_PEOPLE_H
+#ifndef __PLOT_H
+#define __PLOT_H
 
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
-extern Adafruit_PWMServoDriver pwm;
+extern Adafruit_PWMServoDriver pwm2;
+
 // 定义转动动作结构体
 struct RotationAction2 {
   uint8_t servoChannel : 4;  // 要控制的舵机通道 (0-15)
@@ -16,7 +17,7 @@ struct RotationAction2 {
 
 // 定义每个独立动作序列的状态结构体   
 struct ActionSequenceState2 {
-  RotationAction sequence[13]; // 该序列的动作数组
+  RotationAction2 sequence[20]; // 该序列的动作数组
   int actionCount;             // 该序列的动作数量
   int currentActionIndex;      // 该序列当前执行的动作索引
   bool isRunning;              // 该序列是否正在运行
@@ -25,18 +26,20 @@ struct ActionSequenceState2 {
 };
 
 // 声明全局变量
-extern const int MAX_CONCURRENT_SEQUENCES2;
-extern ActionSequenceState activeSequences2[];
-extern int activeSequenceCount2;
-extern bool servoChannelOccupied2[16];
+extern const int MAX_CONCURRENT_SEQUENCES;
+extern ActionSequenceState2 activeSequences[];
+extern int activeSequenceCount;
+extern bool servoChannelOccupied[16];
 
 // 声明函数
-void executeAction2(int sequenceIndex);
-int addActionSequence2(RotationAction actions[], int count);
-void startSequence2(int sequenceIndex);
-void stopSequence2(int sequenceIndex);
-void updateSequences2();
+void executeAction(int sequenceIndex);
+int addActionSequence(RotationAction actions[], int count);
+void startSequence(int sequenceIndex);
+void stopSequence(int sequenceIndex);
+void updateSequences();
 
-uint16_t getPulseWidth2(unsigned long microseconds);
+
+
+uint16_t getPulseWidth(unsigned long microseconds);
 
 #endif

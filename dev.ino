@@ -16,6 +16,7 @@
 #define MUSIC_SERIAL2 Serial2   //使用Mega的Serial2硬件串口
 
 Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver();
 Adafruit_PN532 nfc(255, 255); // 使用默认I2C引脚
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE|U8G_I2C_OPT_DEV_0);	// I2C / TWI 
   
@@ -263,8 +264,7 @@ void slider_back(){
 void onClick1() {
   Serial.println(F("Button1 clicked"));
   //startSliderSequence(slide_zhangfei_out());
-  startSequence(action_liubei_attack_front());
- // startSequence(action_guanyu_die_back());
+
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));

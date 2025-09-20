@@ -168,9 +168,9 @@ void stopSequence(int sequenceIndex) {
 int action_lvbu_attack_front(){
   RotationAction actions[4];
   actions[0] = {0, 0, 0, 100};
-  actions[1] = {0, 0, 40, 1450};  
+  actions[1] = {0, 0, 40, 1200};  
   actions[2] = {0, 1, 0, 200};  //舵机序号，方向，转动速度，转动时间
-  actions[3] = {0, 1, 40, 1500}; 
+  actions[3] = {0, 1, 40, 1100}; 
   outslider_index = 1;
   return addActionSequence(actions, 4);
 }
@@ -180,23 +180,27 @@ int action_lvbu_heal_front(){
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 10, 1200};  
   actions[2] = {0, 1, 0, 400};
-  actions[3] = {0, 1, 10, 1350};
+  actions[3] = {0, 1, 10, 1150};
   outslider_index = 1; 
   return addActionSequence(actions, 4);
 }
 //吕布技能一
 int action_lvbu_skill1_front(){
-  RotationAction actions[8];
+  RotationAction actions[12];
   actions[0] = {0, 0, 0, 100};
   actions[1] = {0, 0, 60, 900};  
   actions[2] = {0, 1, 0, 200};
-  actions[3] = {0, 1, 60, 900}; 
+  actions[3] = {0, 1, 60, 850}; 
   actions[4] = {0, 1, 0, 200};
   actions[5] = {0, 0, 70, 700};  
   actions[6] = {0, 1, 0, 200};
-  actions[7] = {0, 1, 70, 700}; 
+  actions[7] = {0, 1, 70, 650}; 
+  actions[8] = {0, 1, 0, 200};
+  actions[9] = {0, 0, 75, 700};  
+  actions[10] = {0, 1, 0, 200};
+  actions[11] = {0, 1, 75, 700}; 
   outslider_index = 1;
-  return addActionSequence(actions, 8);
+  return addActionSequence(actions, 12);
 }
 
 int action_lvbu_skill1_back(){
@@ -211,13 +215,13 @@ int action_lvbu_skill1_back(){
 int action_lvbu_skill2_front(){
   RotationAction actions[8];
   actions[0] = {0, 0, 0, 100};
-  actions[1] = {0, 0, 40, 400};  
-  actions[2] = {0, 1, 0, 200};
+  actions[1] = {0, 0, 40, 450};  
+  actions[2] = {0, 1, 0, 1500};
   actions[3] = {0, 1, 40, 400}; 
   actions[4] = {0, 0, 0, 200};
-  actions[5] = {0, 0, 40, 800}; 
+  actions[5] = {0, 0, 60, 900}; 
   actions[6] = {0, 0, 0, 200};
-  actions[7] = {0, 1, 40, 800};
+  actions[7] = {0, 1, 60, 800};
   outslider_index = 1;
   return addActionSequence(actions, 8);
 }
@@ -233,9 +237,9 @@ int action_lvbu_skill2_back(){
 int action_lvbu_die_front(){
   RotationAction actions[4];
   actions[0] = {0, 0, 0, 100};
-  actions[1] = {0, 0, 20, 1550};
+  actions[1] = {0, 0, 20, 1800};
   actions[2] = {0, 0, 0, 2500};  
-  actions[3] = {0, 1, 20, 1600}; 
+  actions[3] = {0, 1, 20, 1700}; 
   return addActionSequence(actions, 4);
 }
 int action_lvbu_die_back(){
@@ -259,9 +263,9 @@ int action_liubei_attack_front(){
 int action_liubei_heal_front(){
   RotationAction actions[4];
   actions[0] = {2, 0, 0, 100};
-  actions[1] = {2, 1, 10, 1200};  
-  actions[2] = {2, 0, 0, 400};
-  actions[3] = {2, 0, 10, 1200}; 
+  actions[1] = {2, 1, 10, 600};  
+  actions[2] = {2, 0, 0, 1000};
+  actions[3] = {2, 0, 10, 300}; 
   outslider_index = 2;
   return addActionSequence(actions, 4);
 }
@@ -331,7 +335,7 @@ int action_guanyu_attack_front() {
   actions[0] = {4, 0, 0, 100};
   actions[1] = {4, 1, 40, 1200};  
   actions[2] = {4, 0, 0, 200};  //舵机序号，方向，转动速度，转动时间
-  actions[3] = {4, 0, 40, 1200}; 
+  actions[3] = {4, 0, 40, 1180}; 
   outslider_index = 3;
   return addActionSequence(actions, 4);
 }
