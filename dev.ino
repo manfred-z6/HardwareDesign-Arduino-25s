@@ -263,8 +263,8 @@ void slider_back(){
 void onClick1() {
   Serial.println(F("Button1 clicked"));
   //startSliderSequence(slide_zhangfei_out());
-  //startSequence(action_lvbu_attack_front());
-  //startSequence(action_liubei_skill1_back());
+  startSequence(action_liubei_attack_front());
+ // startSequence(action_guanyu_die_back());
 }
 void onLongPress1() {
   Serial.println(F("Button1 long-pressed"));
