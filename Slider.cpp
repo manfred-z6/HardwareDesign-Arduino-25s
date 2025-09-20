@@ -212,45 +212,45 @@ void stopSliderSequence(int sequenceIndex) {
 // 预定义动作序列函数（每个序列只控制一个电机）
 int slide_lvbu_out() {
   SliderAction actions[1];
-  actions[0] = {0, 0, 2.0, 2000, 0};       
+  actions[0] = {0, 0, 2.0, 1500, 0};       
   return addSliderSequence(actions, 1);
 }
 int slide_lvbu_back() {
   SliderAction actions[1];
-  actions[0] = {0, 1, 2.0, 2000, 0};        
+  actions[0] = {0, 1, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 
 int slide_liubei_out() {
   SliderAction actions[1];
-  actions[0] = {1, 1, 2.0, 2000, 0};        
+  actions[0] = {1, 1, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 int slide_liubei_back() {
   SliderAction actions[1];
-  actions[0] = {1, 0, 2.0, 2000, 0};        
+  actions[0] = {1, 0, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 
 int slide_guanyu_out() {
   SliderAction actions[1];
-  actions[0] = {2, 1, 2.0, 2000, 0};        
+  actions[0] = {2, 1, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 int slide_guanyu_back() {
   SliderAction actions[1];
-  actions[0] = {2, 0, 2.0, 2000, 0};        
+  actions[0] = {2, 0, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 
 int slide_zhangfei_out() {
   SliderAction actions[1];
-  actions[0] = {3, 1, 2.0, 2000, 0};        
+  actions[0] = {3, 1, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
 int slide_zhangfei_back() {
   SliderAction actions[1];
-  actions[0] = {3, 0, 2.0, 2000, 0};        
+  actions[0] = {3, 0, 2.0, 1500, 0};        
   return addSliderSequence(actions, 1);
 }
  

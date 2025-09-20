@@ -36,9 +36,9 @@ state_mode state = MENU;
 
 // OLED更新计时器
 unsigned long lastOledUpdateTime = 0;
-const unsigned long OLED_UPDATE_INTERVAL = 200; // OLED更新间隔(毫秒)
+const unsigned long OLED_UPDATE_INTERVAL = 500; // OLED更新间隔(毫秒)
 const unsigned long ACTION_PEOPLE_INTERVAL = 3000;
-const unsigned long BACK_INTERVAL = 2000;
+const unsigned long BACK_INTERVAL = 1500;
 
 void setup() {
   Serial.begin(115200);
@@ -93,16 +93,26 @@ void loop() {
 
   // 检查音乐播放状态
   musicPlayer.checkPlayingStatus();
+  //musicPlayer2.checkPlayingStatus();
 
   unsigned long currentTime = millis();
 
   switch(state){
     case MENU:{
-      menu_main();
+      isAnySequenceRunning = false;
       // 更新所有滑块序列状态
       updateSliderSequences();
       // 更新所有动作序列状态
       updateSequences();
+      //更新oled
+      if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL && !isSliderMoving) {
+        menu_main();
+        lastOledUpdateTime = currentTime;
+      }
+      if(flag_slider && (millis() - time_action_end > BACK_INTERVAL)){
+        slider_back();
+        flag_slider = false;
+      }
       break;
     }
     case GAME:{
@@ -117,12 +127,12 @@ void loop() {
         updateSequences();
       }
       
-      if(flag_slider && !isAnySequenceRunning && (millis() - time_action_end > BACK_INTERVAL)){
+      if(flag_slider && (millis() - time_action_end > BACK_INTERVAL)){
         slider_back();
         flag_slider = false;
       }
       // 定期更新OLED显示，避免频繁更新影响NFC读取
-      if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL) {
+      if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL && !isSliderMoving) {
         displayGameStatus();
         lastOledUpdateTime = currentTime;
       }
@@ -146,12 +156,16 @@ void loop() {
       break;
     }
     case PLOT:{
-      menu_plot();
-      //更新所有滑块序列状态
+      isAnySequenceRunning = false;
+      // 更新所有滑块序列状态
       updateSliderSequences();
-      //更新所有动作序列状态
+      // 更新所有动作序列状态
       updateSequences();
-      break;
+      //更新oled
+      if (currentTime - lastOledUpdateTime >= OLED_UPDATE_INTERVAL && !isSliderMoving) {
+        menu_plot();
+        lastOledUpdateTime = currentTime;
+      }
     }
     default: break;
   }
@@ -248,8 +262,8 @@ void slider_back(){
 // 按钮回调函数
 void onClick1() {
   Serial.println(F("Button1 clicked"));
-  startSliderSequence(slide_zhangfei_out());
-  //startSequence(action_lvbu_skill1_front());
+  //startSliderSequence(slide_zhangfei_out());
+  //startSequence(action_lvbu_attack_front());
   //startSequence(action_liubei_skill1_back());
 }
 void onLongPress1() {
@@ -266,7 +280,7 @@ void onLongPress1() {
 
 void onClick2() {
   Serial.println(F("Button2 clicked"));
-  startSliderSequence(slide_zhangfei_back());
+  //startSliderSequence(slide_zhangfei_back());
   //startSequence(action_lvbu_skill2_front());
   //startSequence(action_zhangfei_skill2_back());
 }
